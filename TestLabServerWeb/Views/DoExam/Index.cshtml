@@ -1,0 +1,257 @@
+﻿@model List<TestLabEntity.AutoDB.TlQuestion>
+
+@{
+    ViewData["Title"] = "Do Exam";
+    var paper = ViewData["Paper"] as TestLabEntity.AutoDB.TlPaper;
+    var paperDetail = ViewData["PaperDetail"] as List<TestLabEntity.AutoDB.TlSubmitpaperDetail>;
+}
+
+<div class="text-center">
+    <h1 class="display-4">@paper.PaperCode</h1>
+    <h6 class="display-6">@ViewBag.username</h6>
+    <h6 class="display-6 text-danger" id="timer"></h6>
+    <h4 class="text-danger">@ViewBag.Message</h4>
+</div>
+
+@{int i = 1;}
+@foreach (var item in Model)
+{
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Question @i</h5>
+        </div>
+        <div class="card-body">
+            <p>@item.QuestionText</p>
+            <center>
+            @if (item.QuestionImageBase64 != "")
+            {
+                <img src="@item.QuestionImageBase64" alt="Question Image" style="max-height: 300px;" />
+            }
+            </center>
+        </div>
+        <div class="card-footer">
+            @* List answer button *@
+            <center>
+            <div class="btn-group-vertical" role="group" aria-label="Basic example">
+                @foreach (var answer in item.TlAnswers)
+                {
+                    @if (paperDetail != null)
+                    {
+                        @if (paperDetail.Where(x => x.QuestionId == item.Id && x.AnswerId == answer.Id).Count() > 0)
+                        {
+                            <button tl-button-answer="1" tl-answer-id="@answer.Id" tl-question-id="@item.Id" type="button" class="btn btn-primary mt-2">@answer.AnswerText</button>
+                        }
+                        else
+                        {
+                            <button tl-button-answer="0" tl-answer-id="@answer.Id" tl-question-id="@item.Id" type="button" class="btn btn-outline-primary mt-2">@answer.AnswerText</button>
+                        }
+                    }
+                    else
+                    {
+                        <button tl-button-answer="0" tl-answer-id="@answer.Id" tl-question-id="@item.Id" type="button" class="btn btn-outline-primary mt-2">@answer.AnswerText</button>
+                    }
+                    
+                }
+            </div>
+            </center>
+        </div>
+    </div>
+    <br />
+    i++;
+}
+@* Submit button *@
+<center>
+    <button id="btnSubmit" type="button" class="btn btn-success btn-lg btn-block">Finish Exam</button>
+</center>
+
+
+<script>
+function getFullscreenElement() {
+    return document.fullscreenElement //standard property
+        ||
+        document.webkitFullscreenElement //safari/opera support
+        ||
+        document.mozFullscreenElement //firefox support
+        ||
+        document.msFullscreenElement; //ie/edge support
+}
+
+function toggleFullscreen() {
+    if (getFullscreenElement()) {
+        document.exitFullscreen();
+    } else {
+        document.documentElement.requestFullscreen().catch(console.log);
+    }
+}
+
+function isFullscreen() {
+    if( (screen.availHeight || screen.height-30) <= window.innerHeight) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+$(document).ready(function() {
+    var paperid = @paper.Id;
+    var duration = @ViewBag.Duration;
+
+    Swal.fire({
+        title: '<strong>Quy chế thi</strong>',
+        icon: 'warning',
+        html: '<span>1. Không được nộp bài muộn quá 2 phút</span></br>' +
+            '<span>2. <strong>Tuyệt đối không</strong> được thoát khỏi chế độ toàn màn hình khi đang làm bài thi.</span></br></br>' +
+            '<b>Nếu vi phạm 2 điều trên thí sinh sẽ bị trừ điểm và hệ thống sẽ tự động nộp bài!.<b>',
+        showCloseButton: true,
+        focusConfirm: true,
+        allowOutsideClick: false,
+        confirmButtonText: 'Bắt đầu làm bài',
+        confirmButtonAriaLabel: 'Start',
+        backdrop: `
+                  rgba(0,0,123,0.9) 
+                  url("https://sweetalert2.github.io/images/nyan-cat.gif")
+                  left top
+                  no-repeat
+                `
+    }).then((result) => {
+        if (result.isConfirmed) {
+            comfirm_a = 1;
+            toggleFullscreen();
+                // Set timer
+            var timer = duration,
+                minutes, seconds;
+            var interval = setInterval(function() {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                $('#timer').text(minutes + ":" + seconds);
+
+                // check full screen after 5s
+                if (!isFullscreen() && timer < duration - 5) {
+                    timer = duration;
+                    clearInterval(interval);
+                    $('#btnSubmit').click();
+                }
+
+                if (--timer < 0) {
+                    timer = duration;
+                    clearInterval(interval);
+                    $('#btnSubmit').click();
+                }
+            }, 1000);
+        } else if (result.isDenied) {
+            location.reload();
+        }
+    });
+
+
+
+
+    // Submit button
+    $("#btnSubmit").click(function() {
+        console.log("Submit");
+        // Submit paper
+        $.ajax({
+            url: "/DoExam/SubmitPaper",
+            type: "POST",
+            data: {
+                paperid: paperid,
+            },
+            success: function(data, status, xhr) {
+                // if status is 200
+                if (xhr.status == 200) {
+                    // swal success
+                    Swal.fire({
+                        title: "Success",
+                        text: "Submit paper success",
+                        icon: "success",
+                        button: "OK",
+                    }).then((value) => {
+                        // redirect to result page
+                        window.location.href = "/";
+                    });
+                } else {
+                    // swal error
+                    Swal.fire({
+                        title: "Error",
+                        text: "Submit paper error",
+                        icon: "error",
+                        button: "OK",
+                    });
+                }
+            },
+        });
+    });
+    // Get all button with attribute tl-button-answer
+    var buttons = $("button[tl-button-answer]");
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', function() {
+            var answerId = this.getAttribute("tl-answer-id");
+            var questionId = this.getAttribute("tl-question-id");
+            // Change button color
+            // if tl-button-answer = 0 then change to 1
+            // if tl-button-answer = 1 then change to 0
+            if (this.getAttribute("tl-button-answer") == "0") {
+                // Send answer to server
+                $.ajax({
+                    url: "/DoExam/SelectAnswer",
+                    type: "POST",
+                    data: {
+                        paperid: paperid,
+                        questionid: questionId,
+                        answerid: answerId
+                    },
+                    success: function(data, status, xhr) {
+                        // if status = 200 then change button color
+                        if (xhr.status == 200) {
+                            // button
+                            var button = $("button[tl-answer-id='" + answerId + "']");
+                            button.removeClass("btn-outline-primary");
+                            button.addClass("btn-primary");
+                            button.attr("tl-button-answer", "1");
+                        }
+                    }
+                });
+            } else {
+                // Send answer to server
+                $.ajax({
+                    url: "/DoExam/UnSelectAnswer",
+                    type: "POST",
+                    data: {
+                        paperid: paperid,
+                        questionid: questionId,
+                        answerid: answerId
+                    },
+                    success: function(data, status, xhr) {
+                        // if status = 200 then change button color
+                        if (xhr.status == 200) {
+                            // button
+                            var button = $("button[tl-answer-id='" + answerId + "']");
+                            button.removeClass("btn-primary");
+                            button.addClass("btn-outline-primary");
+                            button.attr("tl-button-answer", "0");
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    // if visibilitychange then submit paper
+    document.addEventListener("visibilitychange", function() {
+        if (document.visibilityState != "visible") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Phát hiện!',
+                text: 'Bạn đã cố gắng gian lận, hệ thống tự nộp bài!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            $('#btnSubmit').click();
+        }
+    });
+});
+</script>
