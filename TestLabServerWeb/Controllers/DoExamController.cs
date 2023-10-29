@@ -41,6 +41,8 @@ namespace TestLabServerWeb.Controllers
                             ViewData["Paper"] = paper;
                             ViewBag.Username = username;
                             ViewBag.Duration = seconds;
+                            ViewBag.userid = user.Id;
+                            ViewBag.Paperid = paper.Id;
                             List<TlSubmitpaperDetail> submitpaperDetails = _paperRepository.GetSubmitPaperDetails(user.Id, paper.Id);
                             ViewData["PaperDetail"] = submitpaperDetails;
                             return View(questions);

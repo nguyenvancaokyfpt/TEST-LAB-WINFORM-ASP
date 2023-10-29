@@ -20,4 +20,5 @@ public partial class TlStudent
     public byte[] CreateAt { get; set; } = null!;
 
     public virtual ICollection<TlSubmitpaper> TlSubmitpapers { get; } = new List<TlSubmitpaper>();
+
 }

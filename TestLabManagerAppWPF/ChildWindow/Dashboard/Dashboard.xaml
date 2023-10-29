@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="TestLabManagerAppWPF.ChildWindow.Dashboard.Dashboard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+             xmlns:local="clr-namespace:TestLabManagerAppWPF.ChildWindow.Dashboard"
+             xmlns:viewmodel="clr-namespace:TestLabManagerAppWPF.ViewModel"
+             d:DataContext="{d:DesignInstance Type=viewmodel:DashboardViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Button Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Center" Width="200" Height="70">
+            <StackPanel Orientation="Horizontal">
+                <fa:IconImage Icon="UserGroup" HorizontalAlignment="Left" Foreground="Black" Width="30" Height="30" Margin="0,0,10,0"/>
+                <TextBlock Text="X Student" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Foreground="Black"/>
+            </StackPanel>
+        </Button>
+        <Button Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Center" Width="200" Height="70">
+            <StackPanel Orientation="Horizontal">
+                <fa:IconImage Icon="Book" HorizontalAlignment="Left" Foreground="Black" Width="30" Height="30" Margin="0,0,10,0"/>
+                <TextBlock Text="X Course" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Foreground="Black"/>
+            </StackPanel>
+        </Button>
+        <Button Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Center" Width="200" Height="70">
+            <StackPanel Orientation="Horizontal">
+                <fa:IconImage Icon="Chain" HorizontalAlignment="Left" Foreground="Black" Width="30" Height="30" Margin="0,0,10,0"/>
+                <TextBlock Text="X Chapter" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Foreground="Black"/>
+            </StackPanel>
+        </Button>
+        <Button Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Center" Width="200" Height="70">
+            <StackPanel Orientation="Horizontal">
+                <fa:IconImage Icon="Question" HorizontalAlignment="Left" Foreground="Black" Width="30" Height="30" Margin="0,0,10,0"/>
+                <TextBlock Text="X Question" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Foreground="Black"/>
+            </StackPanel>
+        </Button>
+        <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Center" Width="200" Height="70">
+            <StackPanel Orientation="Horizontal">
+                <fa:IconImage Icon="Paperclip" HorizontalAlignment="Left" Foreground="Black" Width="30" Height="30" Margin="0,0,10,0"/>
+                <TextBlock Text="X Test Paper" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Foreground="Black"/>
+            </StackPanel>
+        </Button>
+        <Button Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Center" Width="200" Height="70">
+            <StackPanel Orientation="Horizontal">
+                <fa:IconImage Icon="Newspaper" HorizontalAlignment="Left" Foreground="Black" Width="30" Height="30" Margin="0,0,10,0"/>
+                <TextBlock Text="X Submit Paper" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Foreground="Black"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>

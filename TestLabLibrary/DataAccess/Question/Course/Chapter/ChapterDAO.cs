@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,19 +54,19 @@ namespace TestLabLibrary.DataAccess.Question
                 {
                     if (course_id == 0 && search == "")
                     {
-                        chapters = db.TlChapters.Skip(offset).Take(limit).ToList();
+                        chapters = db.TlChapters.Include(c => c.Course).Skip(offset).Take(limit).ToList();
                     }
                     else if (course_id == 0 && search != "")
                     {
-                        chapters = db.TlChapters.Where(c => c.ChapterName.Contains(search)).Skip(offset).Take(limit).ToList();
+                        chapters = db.TlChapters.Include(c=> c.Course).Where(c => c.ChapterName.Contains(search)).Skip(offset).Take(limit).ToList();
                     }
                     else if (course_id != 0 && search == "")
                     {
-                        chapters = db.TlChapters.Where(c => c.CourseId == course_id).Skip(offset).Take(limit).ToList();
+                        chapters = db.TlChapters.Include(c => c.Course).Where(c => c.CourseId == course_id).Skip(offset).Take(limit).ToList();
                     }
                     else
                     {
-                        chapters = db.TlChapters.Where(c => c.CourseId == course_id && c.ChapterName.Contains(search)).Skip(offset).Take(limit).ToList();
+                        chapters = db.TlChapters.Include(c => c.Course).Where(c => c.CourseId == course_id && c.ChapterName.Contains(search)).Skip(offset).Take(limit).ToList();
                     }
                 }
             }

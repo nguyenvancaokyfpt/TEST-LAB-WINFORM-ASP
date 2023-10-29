@@ -6,6 +6,9 @@
     var paperDetail = ViewData["PaperDetail"] as List<TestLabEntity.AutoDB.TlSubmitpaperDetail>;
 }
 
+<input id="tl-user-id" type="hidden" value="@ViewBag.userid"/>
+<input id="tl-paper-id" type="hidden" value="@ViewBag.paperid"/>
+
 <div class="text-center">
     <h1 class="display-4">@paper.PaperCode</h1>
     <h6 class="display-6">@ViewBag.username</h6>
@@ -130,11 +133,11 @@ $(document).ready(function() {
                 $('#timer').text(minutes + ":" + seconds);
 
                 // check full screen after 5s
-                if (!isFullscreen() && timer < duration - 5) {
-                    timer = duration;
-                    clearInterval(interval);
-                    $('#btnSubmit').click();
-                }
+                //if (!isFullscreen() && timer < duration - 5) {
+                //    timer = duration;
+                //    clearInterval(interval);
+                //    $('#btnSubmit').click();
+                //}
 
                 if (--timer < 0) {
                     timer = duration;
@@ -185,73 +188,74 @@ $(document).ready(function() {
             },
         });
     });
+
     // Get all button with attribute tl-button-answer
-    var buttons = $("button[tl-button-answer]");
-    for (var i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', function() {
-            var answerId = this.getAttribute("tl-answer-id");
-            var questionId = this.getAttribute("tl-question-id");
-            // Change button color
-            // if tl-button-answer = 0 then change to 1
-            // if tl-button-answer = 1 then change to 0
-            if (this.getAttribute("tl-button-answer") == "0") {
-                // Send answer to server
-                $.ajax({
-                    url: "/DoExam/SelectAnswer",
-                    type: "POST",
-                    data: {
-                        paperid: paperid,
-                        questionid: questionId,
-                        answerid: answerId
-                    },
-                    success: function(data, status, xhr) {
-                        // if status = 200 then change button color
-                        if (xhr.status == 200) {
-                            // button
-                            var button = $("button[tl-answer-id='" + answerId + "']");
-                            button.removeClass("btn-outline-primary");
-                            button.addClass("btn-primary");
-                            button.attr("tl-button-answer", "1");
-                        }
-                    }
-                });
-            } else {
-                // Send answer to server
-                $.ajax({
-                    url: "/DoExam/UnSelectAnswer",
-                    type: "POST",
-                    data: {
-                        paperid: paperid,
-                        questionid: questionId,
-                        answerid: answerId
-                    },
-                    success: function(data, status, xhr) {
-                        // if status = 200 then change button color
-                        if (xhr.status == 200) {
-                            // button
-                            var button = $("button[tl-answer-id='" + answerId + "']");
-                            button.removeClass("btn-primary");
-                            button.addClass("btn-outline-primary");
-                            button.attr("tl-button-answer", "0");
-                        }
-                    }
-                });
-            }
-        });
-    }
+    //var buttons = $("button[tl-button-answer]");
+    //for (var i = 0; i < buttons.length; i++) {
+    //    buttons[i].addEventListener('click', function() {
+    //        var answerId = this.getAttribute("tl-answer-id");
+    //        var questionId = this.getAttribute("tl-question-id");
+    //        // Change button color
+    //        // if tl-button-answer = 0 then change to 1
+    //        // if tl-button-answer = 1 then change to 0
+    //        if (this.getAttribute("tl-button-answer") == "0") {
+    //            // Send answer to server
+    //            $.ajax({
+    //                url: "/DoExam/SelectAnswer",
+    //                type: "POST",
+    //                data: {
+    //                    paperid: paperid,
+    //                    questionid: questionId,
+    //                    answerid: answerId
+    //                },
+    //                success: function(data, status, xhr) {
+    //                    // if status = 200 then change button color
+    //                    if (xhr.status == 200) {
+    //                        // button
+    //                        var button = $("button[tl-answer-id='" + answerId + "']");
+    //                        button.removeClass("btn-outline-primary");
+    //                        button.addClass("btn-primary");
+    //                        button.attr("tl-button-answer", "1");
+    //                    }
+    //                }
+    //            });
+    //        } else {
+    //            // Send answer to server
+    //            $.ajax({
+    //                url: "/DoExam/UnSelectAnswer",
+    //                type: "POST",
+    //                data: {
+    //                    paperid: paperid,
+    //                    questionid: questionId,
+    //                    answerid: answerId
+    //                },
+    //                success: function(data, status, xhr) {
+    //                    // if status = 200 then change button color
+    //                    if (xhr.status == 200) {
+    //                        // button
+    //                        var button = $("button[tl-answer-id='" + answerId + "']");
+    //                        button.removeClass("btn-primary");
+    //                        button.addClass("btn-outline-primary");
+    //                        button.attr("tl-button-answer", "0");
+    //                    }
+    //                }
+    //            });
+    //        }
+    //    });
+    //}
 
     // if visibilitychange then submit paper
-    document.addEventListener("visibilitychange", function() {
-        if (document.visibilityState != "visible") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Phát hiện!',
-                text: 'Bạn đã cố gắng gian lận, hệ thống tự nộp bài!',
-                showConfirmButton: false,
-                timer: 1500
-            });
-            $('#btnSubmit').click();
-        }
-    });
+    //document.addEventListener("visibilitychange", function() {
+    //    if (document.visibilityState != "visible") {
+    //        Swal.fire({
+    //            icon: 'error',
+    //            title: 'Phát hiện!',
+    //            text: 'Bạn đã cố gắng gian lận, hệ thống tự nộp bài!',
+    //            showConfirmButton: false,
+    //            timer: 1500
+    //        });
+    //        $('#btnSubmit').click();
+    //    }
+    //});
 });
 </script>

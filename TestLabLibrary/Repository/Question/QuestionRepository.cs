@@ -58,5 +58,10 @@ namespace TestLabLibrary.Repository
         bool IQuestionRepository.AddQuestionToPaper(int id, int idPaperSelected) => QuestionDAO.Instance.AddQuestionToPaper(id, idPaperSelected);
 
         List<TlSubmitpaperDetail> IQuestionRepository.GetSubmitPaperDetails(int id) => QuestionDAO.Instance.GetSubmitPaperDetails(id);
+
+        object IQuestionRepository.GetQuestionsOfPaper(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

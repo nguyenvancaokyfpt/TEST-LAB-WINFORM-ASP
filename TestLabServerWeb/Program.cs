@@ -1,4 +1,6 @@
-﻿namespace TestLabServerWeb
+﻿using TestLabServerWeb.Hubs;
+
+namespace TestLabServerWeb
 {
     public class Program
     {
@@ -15,7 +17,8 @@
                 cfg.Cookie.Name = "testlab";
                 cfg.IdleTimeout = new TimeSpan(0, 60, 0);
             });
-            
+            builder.Services.AddSignalR();
+
             var app = builder.Build();
 
 
@@ -37,6 +40,7 @@
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.MapHub<SignalrServer>("/signalrServer");
 
             app.Run();
         }

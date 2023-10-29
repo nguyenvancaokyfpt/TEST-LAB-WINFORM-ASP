@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,11 +54,11 @@ namespace TestLabLibrary.DataAccess.Paper
                 {
                     if (search == "")
                     {
-                        papers = db.TlPapers.Skip(offset).Take(limit).ToList();
+                        papers = db.TlPapers.Include(p => p.Course).Skip(offset).Take(limit).ToList();
                     }
                     else
                     {
-                        papers = db.TlPapers.Where(p => p.PaperName.Contains(search) && p.PaperCode.Contains(search)).Skip(offset).Take(limit).ToList();
+                        papers = db.TlPapers.Include(p => p.Course).Where(p => p.PaperName.Contains(search) && p.PaperCode.Contains(search)).Skip(offset).Take(limit).ToList();
                     }
                 }
             }
@@ -213,7 +214,7 @@ namespace TestLabLibrary.DataAccess.Paper
             }
             return result;
         }
-        
+
         public int CountAll()
         {
             int count = 0;

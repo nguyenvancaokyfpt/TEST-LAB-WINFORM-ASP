@@ -1,0 +1,55 @@
+﻿<Window x:Class="TestLabManagerAppWPF.ChildWindow.TestPaper.AddQuestionTestPaperWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+        xmlns:local="clr-namespace:TestLabManagerAppWPF.ChildWindow.TestPaper"
+        mc:Ignorable="d"
+        Title="AddQuestionTestPaperWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Content="Search Question"/>
+            <TextBox Name="txtSearch" Grid.Row="1" Grid.Column="0" Margin="2,2,2,2"/>
+            <Button Grid.Row="1" Grid.Column="1" Margin="2,2,2,2" Background="#2e51a3" Click="Search_Click">
+                <StackPanel Orientation="Horizontal">
+                    <fa:IconImage Icon="Search" HorizontalAlignment="Left" Foreground="White" Width="15" Height="15" Margin="0,0,10,0"/>
+                    <TextBlock Text="Search" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13" FontWeight="DemiBold" Foreground="White"/>
+                </StackPanel>
+            </Button>
+            <Label Grid.Row="0" Grid.Column="2" Content="Course Filter"/>
+            <ComboBox Grid.Row="1" Grid.Column="2" Margin="2,2,2,2" Name="cmbCourse" SelectionChanged="cmbCourse_SelectionChanged"/>
+            <Label Grid.Row="0" Grid.Column="3" Content="Chapter Filter"/>
+            <ComboBox Grid.Row="1" Grid.Column="3" Margin="2,2,2,2" Name="cmbChapter" SelectionChanged="cmbChapter_SelectionChanged"/>
+        </Grid>
+        <ListView Grid.Row="1" Width="auto" Height="auto" Name="lvQuestions">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding Path=Id}"/>
+                    <GridViewColumn Header="QuestionText" Width="700" DisplayMemberBinding="{Binding Path=QuestionText}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Grid.Row="2" Height="40" VerticalAlignment="Bottom" Margin="5,5,5,5" Padding="10" Click="btnSave" Background="#8ea7e9">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <fa:IconImage Icon="Save" HorizontalAlignment="Left" Foreground="White" Width="15" Height="30" Margin="0,0,10,0"/>
+                <TextBlock Text="Save" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontStretch="Medium" Foreground="White"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Window>

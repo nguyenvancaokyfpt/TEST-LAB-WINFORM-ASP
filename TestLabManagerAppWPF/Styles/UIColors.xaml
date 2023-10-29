@@ -1,0 +1,43 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--Background Colors-->
+    <Color x:Key="primaryBackColor1">#2E86AB</Color>
+    <Color x:Key="primaryBackColor2">#4A90E2</Color>
+    <Color x:Key="secondaryBackColor1">#1F4068</Color>
+    <Color x:Key="secondaryBackColor2">#295173</Color>
+    <!--Window Border Colors-->
+    <Color x:Key="winBorderColor1">#295173</Color>
+    <Color x:Key="winBorderColor2">#1A2B48</Color>
+    <Color x:Key="winBorderColor3">#18334E</Color>
+    <!--Color Palette-->
+    <SolidColorBrush x:Key="color1" Color="#2E86AB"/>
+    <SolidColorBrush x:Key="color2" Color="#4A90E2"/>
+    <SolidColorBrush x:Key="color3" Color="#5B9BD5"/>
+    <SolidColorBrush x:Key="color4" Color="#0077A2"/>
+    <SolidColorBrush x:Key="color5" Color="#0099CC"/>
+    <SolidColorBrush x:Key="color6" Color="#1F4068"/>
+    <SolidColorBrush x:Key="color7" Color="#295173"/>
+    <SolidColorBrush x:Key="color8" Color="#1A2B48"/>
+    <SolidColorBrush x:Key="color9" Color="#18334E"/>
+    <SolidColorBrush x:Key="color10" Color="#005580"/>
+    <!--Font Colors-->
+    <SolidColorBrush x:Key="titleColor1" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="titleColor2" Color="#CCCCCC"/>
+    <SolidColorBrush x:Key="titleColor3" Color="#999999"/>
+    <SolidColorBrush x:Key="plainTextColor1" Color="#444444"/>
+    <SolidColorBrush x:Key="plainTextColor2" Color="#777777"/>
+    <SolidColorBrush x:Key="plainTextColor3" Color="#AAAAAA"/>
+    <!--Panel Colors-->
+    <SolidColorBrush x:Key="panelColor" Color="#F2F2F2"/>
+    <SolidColorBrush x:Key="panelOverColor" Color="#E5E5E5"/>
+    <SolidColorBrush x:Key="panelActiveColor" Color="#D8D8D8"/>
+    <!--Button Colors-->
+    <SolidColorBrush x:Key="buttonColor" Color="#0077A2"/>
+    <SolidColorBrush x:Key="buttonHoverColor" Color="#005580"/>
+    <SolidColorBrush x:Key="buttonPressedColor" Color="#0099CC"/>
+    <!--TextBox Colors-->
+    <SolidColorBrush x:Key="textBoxBorderColor" Color="#CCCCCC"/>
+    <SolidColorBrush x:Key="textBoxBackgroundColor" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="textBoxTextColor" Color="#333333"/>
+    <!--Etc-->
+</ResourceDictionary>

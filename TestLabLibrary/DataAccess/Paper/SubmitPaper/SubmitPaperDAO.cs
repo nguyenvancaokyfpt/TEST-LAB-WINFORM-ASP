@@ -166,8 +166,15 @@ namespace TestLabLibrary.DataAccess.Paper
                 using (var db = new TestLabContext())
                 {
                     TlSubmitpaper? submitPaperToDelete = db.TlSubmitpapers.Where(sp => sp.Id == id).FirstOrDefault();
+                    // delete all submit paper detail
+                    List<TlSubmitpaperDetail> submitPaperDetailsToDelete = db.TlSubmitpaperDetails.Where(spd => spd.SubmitpaperId == id).ToList();
                     if (submitPaperToDelete != null)
                     {
+                        if (submitPaperDetailsToDelete.Count > 0)
+                        {
+                            db.TlSubmitpaperDetails.RemoveRange(submitPaperDetailsToDelete);
+                            db.SaveChanges();
+                        }
                         db.TlSubmitpapers.Remove(submitPaperToDelete);
                         db.SaveChanges();
                         result = true;
@@ -255,11 +262,11 @@ namespace TestLabLibrary.DataAccess.Paper
                 {
                     if (pid == 0)
                     {
-                        submitPapers = db.TlSubmitpapers.Include(sp => sp.Student).Include(sp => sp.Paper).Where(sp => sp.Student.Username.Contains(search)).Skip(offset).Take(limit).ToList();
+                        submitPapers = db.TlSubmitpapers.Include(sp => sp.Paper.Course).Include(sp => sp.Student).Include(sp => sp.Paper).Where(sp => sp.Student.Username.Contains(search)).Skip(offset).Take(limit).ToList();
                     }
                     else
                     {
-                        submitPapers = db.TlSubmitpapers.Include(sp => sp.Student).Include(sp => sp.Paper).Where(sp => sp.Student.Username.Contains(search) && sp.PaperId == pid).Skip(offset).Take(limit).ToList();
+                        submitPapers = db.TlSubmitpapers.Include(sp => sp.Paper.Course).Include(sp => sp.Student).Include(sp => sp.Paper).Where(sp => sp.Student.Username.Contains(search) && sp.PaperId == pid).Skip(offset).Take(limit).ToList();
                     }
                 }
             }

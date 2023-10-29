@@ -49,5 +49,6 @@ namespace TestLabLibrary.Repository
         bool DeleteAllQuestionByPaperId(int idPaperSelected);
         bool AddQuestionToPaper(int id, int idPaperSelected);
         List<TlSubmitpaperDetail> GetSubmitPaperDetails(int id);
+        object GetQuestionsOfPaper(int id);
     }
 }
