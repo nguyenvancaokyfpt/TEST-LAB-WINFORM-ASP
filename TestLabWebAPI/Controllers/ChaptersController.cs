@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using TestLabEntity.AutoDB;
+using TestLabLibrary.Repository;
+using TestLabWebAPI.Response;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -6,13 +11,25 @@ namespace TestLabWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ChapterController : ControllerBase
+    public class ChaptersController : ControllerBase
     {
+        private readonly IQuestionRepository _repository;
+        private readonly IMapper _mapper;
+
+        public ChaptersController(IQuestionRepository repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
+
+
         // GET: api/<ChapterController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<TlChapterRes> Get()
         {
-            return new string[] { "value1", "value2" };
+            var chapters = _repository.GetChapters();
+            var chaptersRes = _mapper.Map<IEnumerable<TlChapterRes>>(chapters);
+            return chaptersRes;
         }
 
         // GET api/<ChapterController>/5

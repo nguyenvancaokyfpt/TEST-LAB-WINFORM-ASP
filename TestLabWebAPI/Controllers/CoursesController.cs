@@ -6,7 +6,7 @@ namespace TestLabWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CourseController : ControllerBase
+    public class CoursesController : ControllerBase
     {
         // GET: api/<CourseController>
         [HttpGet]
