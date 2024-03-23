@@ -5,7 +5,7 @@ namespace TestLabWebAPI.Models;
 
 public partial class Student
 {
-    public int IdStudent { get; set; }
+    public int? IdStudent { get; set; }
 
     public string Username { get; set; } = null!;
 
@@ -19,7 +19,7 @@ public partial class Student
 
     public string Gender { get; set; } = null!;
 
-    public DateOnly Birthday { get; set; }
+    public DateOnly? Birthday { get; set; }
 
     public string? Phone { get; set; }
 
@@ -43,11 +43,11 @@ public partial class Student
 
     public DateTime? Timestamps { get; set; }
 
-    public virtual Class IdClassNavigation { get; set; } = null!;
+    public virtual Class? IdClassNavigation { get; set; } = null!;
 
-    public virtual Permission IdPermissionNavigation { get; set; } = null!;
+    public virtual Permission? IdPermissionNavigation { get; set; } = null!;
 
-    public virtual Speciality IdSpecialityNavigation { get; set; } = null!;
+    public virtual Speciality? IdSpecialityNavigation { get; set; } = null!;
 
-    public virtual ICollection<Score> Scores { get; set; } = new List<Score>();
+    public virtual ICollection<Score>? Scores { get; set; } = new List<Score>();
 }

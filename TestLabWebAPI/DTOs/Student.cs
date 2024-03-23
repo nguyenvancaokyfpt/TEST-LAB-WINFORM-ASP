@@ -5,7 +5,6 @@ namespace TestLabWebAPI.DTOs;
 
 public partial class StudentDTO
 {
-    public int IdStudent { get; set; }
 
     public string Username { get; set; } = null!;
 
@@ -19,7 +18,7 @@ public partial class StudentDTO
 
     public string Gender { get; set; } = null!;
 
-    public DateOnly Birthday { get; set; }
+    public string? Birthday { get; set; } = "1900-01-01";
 
     public string? Phone { get; set; }
 
