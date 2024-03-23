@@ -1,0 +1,55 @@
+﻿@using TracNghiemOnline.Models
+@{
+    ViewBag.Title = "Chi Tiết Đề Thi " + ViewBag.test_code;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var List = Model as List<question>;
+}
+
+<div class="title-content">
+    <a class="title" href="@Url.Action("TestManager")">Quay Lại</a>
+    <span class="title">@ViewBag.Title</span>
+</div>
+<div class="content row col s12">
+        <table class="striped centered" id="questions-table">
+            <thead>
+                <tr>
+                    <th>Nội Dung Câu Hỏi</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in List)
+                {
+                    <tr>
+                        <td>
+                            @item.content
+                            @if (!item.img_content.Equals("noimage.png"))
+                            {
+                                <br /><img src="../Assets/img_questions/@item.img_content" style="max-width: 600px; max-height: 600px" />
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+</div>
+<script>
+    $('#questions-table').DataTable({
+        "language": {
+            "lengthMenu": "Hiển thị _MENU_",
+            "zeroRecords": "Không tìm thấy",
+            "info": "Hiển thị trang _PAGE_/_PAGES_",
+            "infoEmpty": "Không có dữ liệu",
+            "emptyTable": "Không có dữ liệu",
+            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+            "sSearch": "Tìm kiếm",
+            "paginate": {
+                "first": "Đầu",
+                "last": "Cuối",
+                "next": "Sau",
+                "previous": "Trước"
+            }
+        }
+    });
+    $('select').select();
+</script>

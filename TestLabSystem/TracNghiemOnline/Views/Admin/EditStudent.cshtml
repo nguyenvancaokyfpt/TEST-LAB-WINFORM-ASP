@@ -1,0 +1,110 @@
+﻿@using TracNghiemOnline.Models
+@{
+    var student = Model as student;
+    ViewBag.Title = "Sửa Tài Khoản Sinh Viên " + student.name;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var ListClass = ViewBag.ListClass;
+    var ListSpecialities = ViewBag.ListSpecialities as List<speciality>;
+}
+
+<div class="title-content">
+    <a class="title" href="@Url.Action("StudentManager")">Quay Lại</a>
+    <span class="title">@ViewBag.Title</span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content">
+    <div class="row">
+        <div id="add_normal" class="col s12">
+            @using (Html.BeginForm("EditStudent", "Admin", FormMethod.Post))
+            {
+                <input type="hidden" id="id_student" name="id_student" required value="@student.id_student" class="hidden">
+                <div class="col l6 s12">
+                    <div class="input-field">
+                        <label for="name">Tên</label>
+                        <input type="text" id="name" name="name" required value="@student.name">
+                    </div>
+                    <div class="input-field">
+                        <label for="username">Tài khoản</label>
+                        <input type="text" name="username" id="username" required value="@student.username">
+                    </div>
+                    <div class="input-field">
+                        <select name="gender" id="gender" required>
+                            @if (student.gender == "Nam")
+                            {
+                                <option value="Nam" selected>Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            }
+                            else
+                            {
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ" selected>Nữ</option>
+                            }
+                        </select>
+                        <label>Giới Tính</label>
+                    </div>
+                    <div class="input-field">
+                        <label for="password">Mật khẩu</label>
+                        <input type="password" data-minlength="6" name="password" id="password">
+                        <span class="helper">Để trống nếu không muốn đổi mật khẩu</span>
+                    </div>
+                </div>
+                <div class="col l6 s12">
+                    <div class="input-field">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required value="@student.email">
+                    </div>
+                    <div class="input-field">
+                        <input type="date" name="birthday" id="birthday" required value="@student.birthday.Date.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="input-field">
+                        <select name="id_speciality" id="id_speciality" required>
+                            @foreach (var item in ListSpecialities)
+                            {
+                                if (item.id_speciality == student.id_speciality)
+                                {
+                                    <option value="@item.id_speciality" selected>@item.speciality_name</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.id_speciality">@item.speciality_name</option>
+                                }
+                            }
+                        </select>
+                        <label>Ngành</label>
+                    </div>
+                    <div class="input-field">
+                        <select name="id_class" id="id_class" required>
+                            @foreach (var item in ListClass)
+                            {
+                                if (item.id_class == student.id_class)
+                                {
+                                    <option value="@item.id_class" selected>@item.class_name</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.id_class">@item.class_name</option>
+                                }
+                            }
+                        </select>
+                        <label>Lớp</label>
+                    </div>
+                </div>
+                <div class="col l12">
+                    <button type="submit" class="btn full-width" id="edit-student" name="edit-student">Sửa</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $('select').select();
+</script>
+
+

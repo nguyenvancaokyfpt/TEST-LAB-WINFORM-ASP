@@ -1,0 +1,39 @@
+﻿@using TracNghiemOnline.Models
+@{
+    var speciality = Model as speciality;
+    ViewBag.Title = "Sửa Ngành " + speciality.speciality_name;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="title-content">
+    <a class="title" href="@Url.Action("SpecialityManager")">Quay Lại</a>
+    <span class="title">@ViewBag.Title</span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content">
+    <div class="row">
+        <div id="add_normal" class="col s12">
+            @using (Html.BeginForm("EditSpeciality", "Admin", FormMethod.Post))
+            {
+                <input type="hidden" id="id_speciality" name="id_speciality" required value="@speciality.id_speciality" class="hidden">
+                <div class="input-field">
+                    <label for="name">Tên Ngành</label>
+                    <input type="text" id="speciality_name" name="speciality_name" required value="@speciality.speciality_name">
+                </div>
+                <button type="submit" class="btn full-width" id="edit-speciality" name="edit-speciality">Sửa</button>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $('select').select();
+</script>
+
+

@@ -1,0 +1,56 @@
+﻿@using TracNghiemOnline.Models
+@model LoginModel
+@{
+    ViewBag.Title = "Đăng Nhập Hệ Thống Trắc Nghiệm Online";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        @ViewBag.Title
+    </title>
+    <link rel="stylesheet" href="~/Assets/css/style.min.css">
+    <link rel="stylesheet" href="~/Assets/css/materialize.min.css">
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Assets/js/materialize.min.js"></script>
+</head>
+
+<body class="bg-login">
+    <div id="status" class="status"></div>
+    <div class="fade">
+        <div class="login fadeInLogin">
+            <h4 class="title-login">
+                Đăng Nhập
+            </h4>
+            <div class="login-form">
+                <div class="row" style="position: relative;">
+                    @using (Html.BeginForm("Index", "Login", FormMethod.Post))
+                    {
+                        if (ViewBag.error != null)
+                        {
+                            <span class="title failed">@ViewBag.error</span>
+                        }
+                        <div class="input-field">
+                            @Html.TextBoxFor(m => m.Username, new { @class = "form-control", @required = "required", @autofocus = "autofocus" })
+                            <label for="username">Tài Khoản</label>
+                        </div>
+                        <div class="input-field">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", @required = "required" })
+                            <label for="password">Mật Khẩu</label>
+                        </div>
+                        <div class="login-btn">
+                            <button type="submit" class="btn waves-effect waves-light green darken-4">Đăng Nhập</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+

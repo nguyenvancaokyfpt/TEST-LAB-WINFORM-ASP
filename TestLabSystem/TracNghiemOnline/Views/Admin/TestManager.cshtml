@@ -1,0 +1,155 @@
+﻿@using TracNghiemOnline.Models
+@{
+    ViewBag.Title = "Quản Lý Bài Thi";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var List = Model as List<TestViewModel>;
+    var ListSubject = ViewBag.ListSubject;
+}
+
+<div class="title-content">
+    <span class="title">@ViewBag.Title</span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content row col s12">
+        <table class="striped centered" id="subjects-table">
+            <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Mã Đề</th>
+                    <th>Môn</th>
+                    <th>Thông Tin</th>
+                    <th>Trạng Thái</th>
+                    <th>
+                        <i class="material-icons" id="icon-settings">settings</i>
+                        <input type="submit" class="material-icons hidden" value="delete_forever" style="background: none; border: none; cursor: pointer; color: red;" id="icon-delete-all" />
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in List)
+                {
+                <tr>
+                    <td>@item.test.test_name</td>
+                    <td>@item.test.test_code</td>
+                    <td>@item.subject.subject_name</td>
+                    <td>@item.test.total_questions câu hỏi <br /> thực hiện trong @item.test.time_to_do phút <br />ghi chú: @item.test.note</td>
+                    <td>@item.status.status_name</td>
+                    <td>
+                        <a href="@Url.Action("EditTest/" + item.test.test_code)"><i class="material-icons">edit</i></a><br />
+                        <a href="@Url.Action("ToggleStatus/" + item.test.test_code)">Mở/Đóng</a><br />
+                        <a href="@Url.Action("TestDetail/" + item.test.test_code)">Chi tiết đề thi</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+</div>
+<div class="content">
+    <div class="row" style="padding-top: 10px">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab col s6"><a href="#add_normal" class="active" style="color: #f27024; font-weight: bold;">Tạo Đề Thi</a></li>
+                <li class="tab col s6"><a href="#_add_via_file" style="color: #f27024; font-weight: bold;">Thêm Bằng File</a></li>
+            </ul>
+        </div>
+        <div id="add_normal" class="col s12">
+            @using (Html.BeginForm("AddTest", "Admin", FormMethod.Post))
+            {
+                <div class="input-field">
+                    <label for="email">Tên <span class="failed">(*)</span></label>
+                    <input type="text" id="test_name" name="test_name" required>
+                </div>
+                <div class="input-field">
+                    <label for="email">Mật khẩu<span class="failed">(*)</span></label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="input-field">
+                    <select name="id_subject" id="id_subject" onchange="get_units(this.value)" required>
+                        <option disabled selected>Chọn</option>
+                        @foreach (var item in ListSubject)
+                        {
+                            <option value="@item.id_subject">@item.subject_name</option>
+                        }
+                    </select>
+                    <label>Môn <span class="failed">(*)</span></label>
+                </div>
+                <div id="list-unit">
+
+                </div>
+                <div class="input-field">
+                    <label>Tổng số câu hỏi</label>
+                    <input type="number" id="total_question" name="total_question" readonly value="0">
+                </div>
+                <div class="input-field">
+                    <label for="email">Thời gian làm bài (phút) <span class="failed">(*)</span></label>
+                    <input type="number" id="time_to_do" name="time_to_do" required>
+                </div>
+                <div class="input-field">
+                    <textarea name="note" class="materialize-textarea"></textarea>
+                    <label for="content">Ghi chú</label>
+                </div>
+                <button type="submit" class="btn full-width" id="add-test" name="add-test">Thêm</button>
+            }
+        </div>
+        <div id="_add_via_file" class="col s12">
+            <span class="title">Chức Năng Đang Xây Dựng!</span>
+        </div>
+    </div>
+</div>
+<script>
+    $('.tabs').tabs();
+    $('.modal').modal();
+    $('#subjects-table').DataTable({
+        "language": {
+            "lengthMenu": "Hiển thị _MENU_",
+            "zeroRecords": "Không tìm thấy",
+            "info": "Hiển thị trang _PAGE_/_PAGES_",
+            "infoEmpty": "Không có dữ liệu",
+            "emptyTable": "Không có dữ liệu",
+            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+            "sSearch": "Tìm kiếm",
+            "paginate": {
+                "first": "Đầu",
+                "last": "Cuối",
+                "next": "Sau",
+                "previous": "Trước"
+            }
+        }
+    });
+    $('select').select();
+    function get_units(id) {
+        var list = $('#list-unit');
+        list.empty();
+        var url = "/Admin/GetJsonUnits/"+ id;
+        var success = function (result) {
+            if (result.length <= 0) {
+                var item = '<div class="input-field"><input type="text" disabled value="Môn này hiện chưa có câu hỏi nào"></div>';
+                list.append(item);
+            } else {
+                for (i = 0; i < result.length; i++) {
+                    var item = '<div class="input-field"><label for="unit-' + result[i].Unit + '">Nhập số câu hỏi chương ' + result[i].Unit + ' (có ' + result[i].Total + ' câu) <span class="failed">(*)</span></label><input type="number" max="' + result[i].Total + '" class="unit_input" onchange="set_sum(' + result[i].Total + ')"  name="unit-' + result[i].Unit + '" id="unit-' + result[i].Unit + '" required></div>';
+                    list.append(item);
+                }
+            }
+        };
+        $.get(url, success);
+    }
+    function set_sum(total) {
+        var sum = 0;
+        $('.unit_input').each(function () {
+            if (parseInt(this.value) > parseInt(this.getAttribute("max")))
+                alert("Nhập quá số câu hỏi đang có, vui lòng kiểm tra lại");
+            else if (this.value != "")
+                sum += parseInt(this.value);
+        });
+        $('#total_question').val(sum);
+    }
+</script>

@@ -1,0 +1,151 @@
+﻿@using TracNghiemOnline.Models
+@{
+    ViewBag.Title = "Quản Lý Ngành";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var List = Model as List<speciality>;
+}
+
+<div class="title-content">
+    <span class="title">@ViewBag.Title</span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content row col s12">
+    @using (Html.BeginForm("DeleteSpeciality", "Admin", FormMethod.Post))
+    {
+        <table class="striped centered" id="specialities-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Ngành</th>
+                    <th>
+                        <p>
+                            <label>
+                                <input type="checkbox" id="checked-all" />
+                                <span></span>
+                            </label>
+                        </p>
+                    </th>
+                    <th>
+                        <i class="material-icons" id="icon-settings">settings</i>
+                        <input type="submit" class="material-icons hidden" value="delete_forever" style="background: none; border: none; cursor: pointer; color: red;" id="icon-delete-all" />
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in List)
+                {
+                    <tr>
+                        <td>@item.id_speciality</td>
+                        <td>@item.speciality_name</td>
+                        <td>
+                            <p>
+                                <label>
+                                    <input type="checkbox" class="checkbox" name="checkbox" value="@item.id_speciality" onchange="check_box()" />
+                                    <span></span>
+                                </label>
+                            </p>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("EditSpeciality/" + item.id_speciality)"><i class="material-icons">edit</i></a>
+                            <a class="modal-trigger" href="#delete-@item.id_speciality"><i class="material-icons">delete</i></a>
+                        </td>
+                    </tr>
+                    <!-- Modal Structure -->
+                    <div id="delete-@item.id_speciality" class="modal">
+                        <div class="modal-content">
+                            <h4>Xác Nhận</h4>
+                            <p>Bạn có xóa ngành @item.speciality_name</p>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                            <a href="@Url.Action("DeleteSpeciality/" + item.id_speciality)" class="modal-close waves-effect waves-green btn-flat">Có</a>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<div class="content">
+    <div class="row" style="padding-top: 10px">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab col s6"><a href="#add_normal" class="active" style="color: #f27024; font-weight: bold;">Thêm Ngành</a></li>
+                <li class="tab col s6"><a href="#_add_via_file" style="color: #f27024; font-weight: bold;">Thêm Bằng File</a></li>
+            </ul>
+        </div>
+        <div id="add_normal" class="col s12">
+            @using (Html.BeginForm("AddSpeciality", "Admin", FormMethod.Post))
+            {
+                    <div class="input-field">
+                        <label for="email">Tên Ngành <span class="failed">(*)</span></label>
+                        <input type="text" id="speciality_name" name="speciality_name" required>
+                    </div>
+                        <button type="submit" class="btn full-width" id="add-speciality" name="add-speciality">Thêm</button>
+            }
+        </div>
+        <div id="_add_via_file" class="col s12">
+            <span class="title">Chức Năng Đang Xây Dựng!</span>
+        </div>
+    </div>
+</div>
+<script>
+    $('.tabs').tabs();
+    $('.modal').modal();
+    $('#specialities-table').DataTable({
+        "language": {
+            "lengthMenu": "Hiển thị _MENU_",
+            "zeroRecords": "Không tìm thấy",
+            "info": "Hiển thị trang _PAGE_/_PAGES_",
+            "infoEmpty": "Không có dữ liệu",
+            "emptyTable": "Không có dữ liệu",
+            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+            "sSearch": "Tìm kiếm",
+            "paginate": {
+                "first": "Đầu",
+                "last": "Cuối",
+                "next": "Sau",
+                "previous": "Trước"
+            }
+        }
+    });
+    $('select').select();
+    $('#checked-all').on('change', function () {
+        if (this.checked) {
+            $('.checkbox').each(function () {
+                this.checked = true;
+            });
+            $('#icon-settings').addClass('hidden');
+            $('#icon-delete-all').removeClass('hidden');
+        } else {
+            $('.checkbox').each(function () {
+                this.checked = false;
+            });
+            $('#icon-settings').removeClass('hidden');
+            $('#icon-delete-all').addClass('hidden');
+        }
+    });
+    function check_box() {
+        $('#icon-delete-all').removeClass('hidden');
+        if ($('.checkbox:checked').length == $('.checkbox').length) {
+            $('#checked-all').prop('checked', true);
+        } else {
+            $('#checked-all').prop('checked', false);
+        }
+        if ($('.checkbox:checked').length == 0) {
+            $('#icon-delete-all').addClass('hidden');
+            $('#icon-settings').removeClass('hidden');
+        } else {
+            $('#icon-settings').addClass('hidden');
+            $('#icon-delete-all').removeClass('hidden');
+        }
+    }
+</script>

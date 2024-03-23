@@ -1,0 +1,245 @@
+﻿@using TracNghiemOnline.Models
+@{
+    ViewBag.Title = "Quản Lý Câu Hỏi";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var List = Model as List<QuestionViewModel>;
+    var ListSubject = ViewBag.ListSubject as List<subject>;
+}
+
+<div class="title-content">
+    <span class="title">@ViewBag.Title <a href="#add_normal">THÊM</a></span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content row col s12">
+    @using (Html.BeginForm("DeleteQuestion", "Admin", FormMethod.Post))
+    {
+        <table class="striped centered" id="questions-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nội Dung</th>
+                    <th>Đáp Án A</th>
+                    <th>Đáp Án B</th>
+                    <th>Đáp Án C</th>
+                    <th>Đáp Án D</th>
+                    <th>Thông Tin</th>
+                    <th>
+                        <p>
+                            <label>
+                                <input type="checkbox" id="checked-all" />
+                                <span></span>
+                            </label>
+                        </p>
+                    </th>
+                    <th>
+                        <i class="material-icons" id="icon-settings">settings</i>
+                        <input type="submit" class="material-icons hidden" value="delete_forever" style="background: none; border: none; cursor: pointer; color: red;" id="icon-delete-all" />
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in List)
+                {
+                <tr>
+                    <td>@item.question.id_question</td>
+                    <td>
+                        @item.question.content
+                        @if (!item.question.img_content.Equals("noimage.png"))
+                        {
+                            <br /><img src="../Assets/img_questions/@item.question.img_content" style="max-width: 600px; max-height: 600px" />
+                        }
+                    </td>
+                    <td>
+                        @item.question.answer_a
+                        @if (item.question.correct_answer.Equals(item.question.answer_a))
+                        {
+                            <br /><span class="failed">(Đáp Án Đúng)</span>
+                        }
+                    </td>
+                    <td>
+                        @item.question.answer_b
+                        @if (item.question.correct_answer.Equals(item.question.answer_b))
+                        {
+                            <br /><span class="failed">(Đáp Án Đúng)</span>
+                        }
+                    </td>
+                    <td>
+                        @item.question.answer_c
+
+                        @if (item.question.correct_answer.Equals(item.question.answer_c))
+                        {
+                            <br /><span class="failed">(Đáp Án Đúng)</span>
+                        }
+                    </td>
+                    <td>
+                        @item.question.answer_d
+                        @if (item.question.correct_answer.Equals(item.question.answer_d))
+                        {
+                            <br /><span class="failed">(Đáp Án Đúng)</span>
+                        }
+                    </td>
+                    <td>Chương @item.question.unit <br />
+                        Môn @item.subject.subject_name</td>
+                    <td>
+                        <p>
+                            <label>
+                                <input type="checkbox" class="checkbox" name="checkbox" value="@item.question.id_question" onchange="check_box()" />
+                                <span></span>
+                            </label>
+                        </p>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("EditQuestion/" + item.question.id_question)"><i class="material-icons">edit</i></a>
+                        <a class="modal-trigger" href="#delete-@item.question.id_question"><i class="material-icons">delete</i></a>
+                    </td>
+                </tr>
+                    <!-- Modal Structure -->
+                    <div id="delete-@item.question.id_question" class="modal">
+                        <div class="modal-content">
+                            <h4>Xác Nhận</h4>
+                            <p>Bạn có xóa câu hỏi @item.question.content</p>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                            <a href="@Url.Action("DeleteQuestion/" + item.question.id_question)" class="modal-close waves-effect waves-green btn-flat">Có</a>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<div class="content">
+    <div class="row" style="padding-top: 10px">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab col s6"><a href="#add_normal" class="active" style="color: #f27024; font-weight: bold;">Thêm Câu Hỏi</a></li>
+                <li class="tab col s6"><a href="#_add_via_file" style="color: #f27024; font-weight: bold;">Thêm Bằng File</a></li>
+            </ul>
+        </div>
+        <div id="add_normal" class="col s12">
+            @using (Html.BeginForm("AddQuestion", "Admin", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+            {
+                <div class="input-field">
+                    <select name="id_subject">
+                        @foreach (var subject in ListSubject)
+                        {
+                            <option value="@subject.id_subject">@subject.subject_name</option>
+                        }
+                    </select>
+                    <label>Môn</label>
+                </div>
+                <div class="input-field">
+                    <input id="number" type="number" name="unit" value="7">
+                    <label for="number">Chương <span class="failed">(*)</span></label>
+                </div>
+                <div class="input-field">
+                    <textarea name="content" class="materialize-textarea" required></textarea>
+                    <label for="content">Nội Dung Câu Hỏi <span class="failed">(*)</span></label>
+                </div>
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>Nội Dung Ảnh (Tùy Chọn)</span>
+                        <input type="file" name="file">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="Chỉ hỗ trợ ảnh đuôi .PNG .png .JPG .jpg">
+                    </div>
+                </div>
+                <div class="input-field">
+                    <textarea name="answer_a" id="answer_a" class="materialize-textarea" onchange="get_val(this.id)" required></textarea>
+                    <label for="answer_a">Đáp Án A <span class="failed">(*)</span></label>
+                </div>
+                <div class="input-field">
+                    <textarea name="answer_b" id="answer_b" class="materialize-textarea" onchange="get_val(this.id)" required></textarea>
+                    <label for="answer_b">Đáp Án B <span class="failed">(*)</span></label>
+                </div>
+                <div class="input-field">
+                    <textarea name="answer_c" id="answer_c" class="materialize-textarea" onchange="get_val(this.id)" required></textarea>
+                    <label for="answer_c">Đáp Án C <span class="failed">(*)</span></label>
+                </div>
+                <div class="input-field">
+                    <textarea name="answer_d" id="answer_d" class="materialize-textarea" onchange="get_val(this.id)" required></textarea>
+                    <label for="answer_d">Đáp Án D <span class="failed">(*)</span></label>
+                </div>
+                <div class="input-field">
+                    <select name="correct_answer">
+                        <option value="" id="val_answer_a">A</option>
+                        <option value="" id="val_answer_b">B</option>
+                        <option value="" id="val_answer_c">C</option>
+                        <option value="" id="val_answer_d">D</option>
+                    </select>
+                    <label>Đáp Án Đúng</label>
+                </div>
+                <button type="submit" class="btn full-width" id="add-question" name="add-question">Thêm</button>
+            }
+        </div>
+        <div id="_add_via_file" class="col s12">
+            <span class="title">Chức Năng Đang Xây Dựng!</span>
+        </div>
+    </div>
+</div>
+<script>
+    $('.tabs').tabs();
+    $('.modal').modal();
+    $('#questions-table').DataTable({
+        "language": {
+            "lengthMenu": "Hiển thị _MENU_",
+            "zeroRecords": "Không tìm thấy",
+            "info": "Hiển thị trang _PAGE_/_PAGES_",
+            "infoEmpty": "Không có dữ liệu",
+            "emptyTable": "Không có dữ liệu",
+            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+            "sSearch": "Tìm kiếm",
+            "paginate": {
+                "first": "Đầu",
+                "last": "Cuối",
+                "next": "Sau",
+                "previous": "Trước"
+            }
+        }
+    });
+    $('select').select();
+    $('#checked-all').on('change', function () {
+        if (this.checked) {
+            $('.checkbox').each(function () {
+                this.checked = true;
+            });
+            $('#icon-settings').addClass('hidden');
+            $('#icon-delete-all').removeClass('hidden');
+        } else {
+            $('.checkbox').each(function () {
+                this.checked = false;
+            });
+            $('#icon-settings').removeClass('hidden');
+            $('#icon-delete-all').addClass('hidden');
+        }
+    });
+    function check_box() {
+        $('#icon-delete-all').removeClass('hidden');
+        if ($('.checkbox:checked').length == $('.checkbox').length) {
+            $('#checked-all').prop('checked', true);
+        } else {
+            $('#checked-all').prop('checked', false);
+        }
+        if ($('.checkbox:checked').length == 0) {
+            $('#icon-delete-all').addClass('hidden');
+            $('#icon-settings').removeClass('hidden');
+        } else {
+            $('#icon-settings').addClass('hidden');
+            $('#icon-delete-all').removeClass('hidden');
+        }
+    }
+    function get_val(id) {
+        var answer = $("#" + id).val();
+        $("#val_" + id).val(answer);
+    }
+</script>

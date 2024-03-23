@@ -1,0 +1,225 @@
+﻿@using TracNghiemOnline.Models
+@{
+    ViewBag.Title = "Quản Lý Sinh Viên";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var List = Model as List<StudentViewModel>;
+    var ListClass = ViewBag.ListClass;
+    var ListSpecialities = ViewBag.ListSpecialities as List<speciality>;
+}
+
+<div class="title-content">
+    <span class="title">@ViewBag.Title</span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content row col s12">
+    @using (Html.BeginForm("DeleteStudent", "Admin", FormMethod.Post))
+    {
+        <table class="striped centered" id="students-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tài Khoản</th>
+                    <th>Email</th>
+                    <th>Tên</th>
+                    <th>Giới Tính</th>
+                    <th>Ngày Sinh</th>
+                    <th>Lớp</th>
+                    <th>Thông Tin</th>
+                    <th>
+                        <p>
+                            <label>
+                                <input type="checkbox" id="checked-all" />
+                                <span></span>
+                            </label>
+                        </p>
+                    </th>
+                    <th>
+                        <i class="material-icons" id="icon-settings">settings</i>
+                        <input type="submit" class="material-icons hidden" value="delete_forever" style="background: none; border: none; cursor: pointer; color: red;" id="icon-delete-all" />
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in List)
+                {
+                    <tr>
+                        <td>@item.student.id_student</td>
+                        <td>@item.student.username</td>
+                        <td>@item.student.email</td>
+                        <td>@item.student.name</td>
+                        <td>@item.student.gender</td>
+                        <td>@item.student.birthday.Date.ToString("dd-MM-yyyy")</td>
+                        <td>Lớp @item.Class.class_name <br />Ngành @item.speciality.speciality_name</td>
+                        <td>
+                            @if (item.student.last_seen == null)
+                            {
+                                <span>Chưa từng online</span>
+                            }
+                            else
+                            {
+                                <span>Online lần cuối lúc</span><br />
+                                @String.Format("{0:dd'-'MM'-'yyyy HH':'mm':'ss}", item.student.last_login) <br /><span>tại</span>
+                                <a href="@item.student.last_seen_url">@item.student.last_seen</a>
+                            }
+                        </td>
+                        <td>
+                            <p>
+                                <label>
+                                    <input type="checkbox" class="checkbox" name="checkbox" value="@item.student.id_student" onchange="check_box()" />
+                                    <span></span>
+                                </label>
+                            </p>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("EditStudent/" + item.student.id_student)"><i class="material-icons">edit</i></a>
+                            <a class="modal-trigger" href="#delete-@item.student.id_student"><i class="material-icons">delete</i></a>
+                        </td>
+                    </tr>
+                    <!-- Modal Structure -->
+                    <div id="delete-@item.student.id_student" class="modal">
+                        <div class="modal-content">
+                            <h4>Xác Nhận</h4>
+                            <p>Bạn có xóa tài khoản @item.student.name</p>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                            <a href="@Url.Action("DeleteStudent/" + item.student.id_student)" class="modal-close waves-effect waves-green btn-flat">Có</a>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<div class="content">
+    <div class="row">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab col s6"><a href="#add_normal" class="active" style="color: #f27024; font-weight: bold;">Thêm Sinh Viên</a></li>
+                <li class="tab col s6"><a href="#_add_via_file" style="color: #f27024; font-weight: bold;">Thêm Bằng File</a></li>
+            </ul>
+        </div>
+        <div id="add_normal" class="col s12">
+            @using (Html.BeginForm("AddStudent", "Admin", FormMethod.Post))
+            {
+            <div class="col l6 s12">
+                <div class="input-field">
+                    <label for="name">Tên <span class="failed">(*)</span></label>
+                    <input type="text" id="name" name="name" onchange="" required>
+                </div>
+                <div class="input-field">
+                    <label for="username">Tài khoản <span class="failed">(*)</span></label>
+                    <input type="text" name="username" id="username" required>
+                </div>
+                <div class="input-field">
+                    <label for="password">Mật khẩu <span class="failed">(*)</span></label>
+                    <input type="password" data-minlength="6" name="password" id="password" required>
+                </div>
+                <div class="input-field">
+                    <select name="gender" id="gender" required>
+                        <option value="Nam" selected>Nam</option>
+                        <option value="Nữ">Nữ</option>
+                    </select>
+                    <label>Giới Tính</label>
+                </div>
+            </div>
+                <div class="col l6 s12">
+                    <div class="input-field">
+                        <label for="email">Email <span class="failed">(*)</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="input-field">
+                        <input type="date" name="birthday" id="birthday" required value="1997-01-01">
+                    </div>
+                    <div class="input-field">
+                        <select name="id_class" id="id_class" required>
+                            @foreach (var item in ListClass)
+                            {
+                                <option value="@item.id_class">@item.class_name</option>
+                            }
+                        </select>
+                        <label>Lớp</label>
+                    </div>
+                    <div class="input-field">
+                        <select name="id_speciality" id="id_speciality" required>
+                            @foreach (var item in ListSpecialities)
+                            {
+                                <option value="@item.id_speciality">@item.speciality_name</option>
+                            }
+                        </select>
+                        <label>Ngành</label>
+                    </div>
+                </div>
+                <div class="col l12">
+                    <button type="submit" class="btn full-width" id="add-student" name="add-student">Thêm</button>
+                </div>
+            }
+        </div>
+        <div id="_add_via_file" class="col s12">
+            <span class="title">Chức Năng Đang Xây Dựng!</span>
+        </div>
+    </div>
+</div>
+<script>
+    $('.tabs').tabs();
+    $('.modal').modal();
+    $('#students-table').DataTable({
+        "language": {
+            "lengthMenu": "Hiển thị _MENU_",
+            "zeroRecords": "Không tìm thấy",
+            "info": "Hiển thị trang _PAGE_/_PAGES_",
+            "infoEmpty": "Không có dữ liệu",
+            "emptyTable": "Không có dữ liệu",
+            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+            "sSearch": "Tìm kiếm",
+            "paginate": {
+                "first": "Đầu",
+                "last": "Cuối",
+                "next": "Sau",
+                "previous": "Trước"
+            }
+        },
+        "aoColumnDefs": [
+            { "bSortable": false, "aTargets": [8 , 9] }
+        ]
+    });
+    $('select').select();
+    $('#checked-all').on('change', function () {
+        if (this.checked) {
+            $('.checkbox').each(function () {
+                this.checked = true;
+            });
+            $('#icon-settings').addClass('hidden');
+            $('#icon-delete-all').removeClass('hidden');
+        } else {
+            $('.checkbox').each(function () {
+                this.checked = false;
+            });
+            $('#icon-settings').removeClass('hidden');
+            $('#icon-delete-all').addClass('hidden');
+        }
+    });
+    function check_box() {
+        $('#icon-delete-all').removeClass('hidden');
+        if ($('.checkbox:checked').length == $('.checkbox').length) {
+            $('#checked-all').prop('checked', true);
+        } else {
+            $('#checked-all').prop('checked', false);
+        }
+        if ($('.checkbox:checked').length == 0) {
+            $('#icon-delete-all').addClass('hidden');
+            $('#icon-settings').removeClass('hidden');
+        } else {
+            $('#icon-settings').addClass('hidden');
+            $('#icon-delete-all').removeClass('hidden');
+        }
+    }
+</script>

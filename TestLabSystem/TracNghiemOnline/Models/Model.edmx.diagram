@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="25a2ae9f773f45ad8d4c83280c99ffab" Name="Diagram1">
+        <EntityTypeShape EntityType="Model.admin" Width="1.5" PointX="6" PointY="17.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.class" Width="1.5" PointX="3.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.grade" Width="1.5" PointX="1.5" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.permission" Width="1.5" PointX="3.75" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.question" Width="1.5" PointX="3" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.quests_of_test" Width="1.5" PointX="5.25" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.score" Width="1.5" PointX="8.25" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.speciality" Width="1.5" PointX="1.5" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.status" Width="1.5" PointX="3.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.student" Width="1.5" PointX="6" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.subject" Width="1.5" PointX="0.75" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.teacher" Width="1.5" PointX="9" PointY="12.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.test" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="Model.FK__admins__id_permi__46E78A0C" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK__students__id_cla__5070F446" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.fk_grade" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.fk_speciality" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK__students__id_per__4F7CD00D" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK__teachers__id_per__4AB81AF0" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK__questions__id_su__5629CD9C" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_quests_of_test_questions" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_quests_of_test_tests" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK__scores__id_stude__60A75C0F" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_scores_tests" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK__students__id_spe__5165187F" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK__teachers__id_spe__4BAC3F29" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK__tests__id_status__59FA5E80" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK__tests__id_subjec__59063A47" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Model.student_test_detail" Width="1.5" PointX="8.25" PointY="8" />
+        <AssociationConnector Association="Model.FK__student_t__id_qu__42ACE4D4" />
+        <AssociationConnector Association="Model.FK__student_t__id_st__41B8C09B" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

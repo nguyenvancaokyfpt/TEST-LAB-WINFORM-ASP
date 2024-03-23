@@ -1,0 +1,1173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="admins">
+          <Key>
+            <PropertyRef Name="id_admin" />
+          </Key>
+          <Property Name="id_admin" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="avatar" Type="varchar" MaxLength="255" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="gender" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="birthday" Type="date" Nullable="false" />
+          <Property Name="phone" Type="varchar" MaxLength="45" />
+          <Property Name="id_permission" Type="int" Nullable="false" />
+          <Property Name="last_login" Type="datetime" />
+          <Property Name="last_seen" Type="nvarchar" MaxLength="100" />
+          <Property Name="last_seen_url" Type="varchar" MaxLength="100" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="classes">
+          <Key>
+            <PropertyRef Name="id_class" />
+          </Key>
+          <Property Name="id_class" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="class_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="id_grade" Type="int" Nullable="false" />
+          <Property Name="id_speciality" Type="int" Nullable="false" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="grades">
+          <Key>
+            <PropertyRef Name="id_grade" />
+          </Key>
+          <Property Name="id_grade" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="grade_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="permissions">
+          <Key>
+            <PropertyRef Name="id_permission" />
+          </Key>
+          <Property Name="id_permission" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="permission_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="questions">
+          <Key>
+            <PropertyRef Name="id_question" />
+          </Key>
+          <Property Name="id_question" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_subject" Type="int" Nullable="false" />
+          <Property Name="unit" Type="int" Nullable="false" />
+          <Property Name="img_content" Type="varchar" MaxLength="255" />
+          <Property Name="content" Type="ntext" Nullable="false" />
+          <Property Name="answer_a" Type="ntext" Nullable="false" />
+          <Property Name="answer_b" Type="ntext" Nullable="false" />
+          <Property Name="answer_c" Type="ntext" Nullable="false" />
+          <Property Name="answer_d" Type="ntext" Nullable="false" />
+          <Property Name="correct_answer" Type="ntext" Nullable="false" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="quests_of_test">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="test_code" Type="int" Nullable="false" />
+          <Property Name="id_question" Type="int" Nullable="false" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="scores">
+          <Key>
+            <PropertyRef Name="id_student" />
+            <PropertyRef Name="test_code" />
+          </Key>
+          <Property Name="id_score" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_student" Type="int" Nullable="false" />
+          <Property Name="test_code" Type="int" Nullable="false" />
+          <Property Name="score_number" Type="float" Nullable="false" />
+          <Property Name="detail" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="time_finish" Type="datetime" />
+        </EntityType>
+        <EntityType Name="specialities">
+          <Key>
+            <PropertyRef Name="id_speciality" />
+          </Key>
+          <Property Name="id_speciality" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="speciality_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="statuses">
+          <Key>
+            <PropertyRef Name="id_status" />
+          </Key>
+          <Property Name="id_status" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="status_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="student_test_detail">
+          <Key>
+            <PropertyRef Name="id_student" />
+            <PropertyRef Name="test_code" />
+            <PropertyRef Name="id_question" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_student" Type="int" Nullable="false" />
+          <Property Name="test_code" Type="int" Nullable="false" />
+          <Property Name="id_question" Type="int" Nullable="false" />
+          <Property Name="answer_a" Type="ntext" Nullable="false" />
+          <Property Name="answer_b" Type="ntext" Nullable="false" />
+          <Property Name="answer_c" Type="ntext" Nullable="false" />
+          <Property Name="answer_d" Type="ntext" Nullable="false" />
+          <Property Name="student_answer" Type="ntext" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="students">
+          <Key>
+            <PropertyRef Name="id_student" />
+          </Key>
+          <Property Name="id_student" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="avatar" Type="varchar" MaxLength="255" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="gender" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="birthday" Type="date" Nullable="false" />
+          <Property Name="phone" Type="varchar" MaxLength="45" />
+          <Property Name="id_permission" Type="int" Nullable="false" />
+          <Property Name="id_class" Type="int" Nullable="false" />
+          <Property Name="id_speciality" Type="int" Nullable="false" />
+          <Property Name="is_testing" Type="int" />
+          <Property Name="time_start" Type="datetime" />
+          <Property Name="time_remaining" Type="varchar" MaxLength="10" />
+          <Property Name="last_login" Type="datetime" />
+          <Property Name="last_seen" Type="nvarchar" MaxLength="100" />
+          <Property Name="last_seen_url" Type="varchar" MaxLength="100" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="subjects">
+          <Key>
+            <PropertyRef Name="id_subject" />
+          </Key>
+          <Property Name="id_subject" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="subject_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="teachers">
+          <Key>
+            <PropertyRef Name="id_teacher" />
+          </Key>
+          <Property Name="id_teacher" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="avatar" Type="varchar" MaxLength="255" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="gender" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="birthday" Type="date" Nullable="false" />
+          <Property Name="phone" Type="varchar" MaxLength="45" />
+          <Property Name="id_permission" Type="int" Nullable="false" />
+          <Property Name="id_speciality" Type="int" Nullable="false" />
+          <Property Name="last_login" Type="datetime" />
+          <Property Name="last_seen" Type="nvarchar" MaxLength="100" />
+          <Property Name="last_seen_url" Type="varchar" MaxLength="100" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tests">
+          <Key>
+            <PropertyRef Name="test_code" />
+          </Key>
+          <Property Name="test_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="test_code" Type="int" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="id_subject" Type="int" Nullable="false" />
+          <Property Name="total_questions" Type="int" Nullable="false" />
+          <Property Name="time_to_do" Type="int" Nullable="false" />
+          <Property Name="note" Type="ntext" />
+          <Property Name="id_status" Type="int" Nullable="false" />
+          <Property Name="timestamps" Type="datetime" />
+        </EntityType>
+        <Association Name="FK__admins__id_permi__46E78A0C">
+          <End Role="permissions" Type="Self.permissions" Multiplicity="1" />
+          <End Role="admins" Type="Self.admins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="permissions">
+              <PropertyRef Name="id_permission" />
+            </Principal>
+            <Dependent Role="admins">
+              <PropertyRef Name="id_permission" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__questions__id_su__5629CD9C">
+          <End Role="subjects" Type="Self.subjects" Multiplicity="1" />
+          <End Role="questions" Type="Self.questions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="subjects">
+              <PropertyRef Name="id_subject" />
+            </Principal>
+            <Dependent Role="questions">
+              <PropertyRef Name="id_subject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__scores__id_stude__60A75C0F">
+          <End Role="students" Type="Self.students" Multiplicity="1" />
+          <End Role="scores" Type="Self.scores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="students">
+              <PropertyRef Name="id_student" />
+            </Principal>
+            <Dependent Role="scores">
+              <PropertyRef Name="id_student" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__students__id_cla__5070F446">
+          <End Role="classes" Type="Self.classes" Multiplicity="1" />
+          <End Role="students" Type="Self.students" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="classes">
+              <PropertyRef Name="id_class" />
+            </Principal>
+            <Dependent Role="students">
+              <PropertyRef Name="id_class" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__students__id_per__4F7CD00D">
+          <End Role="permissions" Type="Self.permissions" Multiplicity="1" />
+          <End Role="students" Type="Self.students" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="permissions">
+              <PropertyRef Name="id_permission" />
+            </Principal>
+            <Dependent Role="students">
+              <PropertyRef Name="id_permission" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__students__id_spe__5165187F">
+          <End Role="specialities" Type="Self.specialities" Multiplicity="1" />
+          <End Role="students" Type="Self.students" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="specialities">
+              <PropertyRef Name="id_speciality" />
+            </Principal>
+            <Dependent Role="students">
+              <PropertyRef Name="id_speciality" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__teachers__id_per__4AB81AF0">
+          <End Role="permissions" Type="Self.permissions" Multiplicity="1" />
+          <End Role="teachers" Type="Self.teachers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="permissions">
+              <PropertyRef Name="id_permission" />
+            </Principal>
+            <Dependent Role="teachers">
+              <PropertyRef Name="id_permission" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__teachers__id_spe__4BAC3F29">
+          <End Role="specialities" Type="Self.specialities" Multiplicity="1" />
+          <End Role="teachers" Type="Self.teachers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="specialities">
+              <PropertyRef Name="id_speciality" />
+            </Principal>
+            <Dependent Role="teachers">
+              <PropertyRef Name="id_speciality" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tests__id_status__59FA5E80">
+          <End Role="statuses" Type="Self.statuses" Multiplicity="1" />
+          <End Role="tests" Type="Self.tests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="statuses">
+              <PropertyRef Name="id_status" />
+            </Principal>
+            <Dependent Role="tests">
+              <PropertyRef Name="id_status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tests__id_subjec__59063A47">
+          <End Role="subjects" Type="Self.subjects" Multiplicity="1" />
+          <End Role="tests" Type="Self.tests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="subjects">
+              <PropertyRef Name="id_subject" />
+            </Principal>
+            <Dependent Role="tests">
+              <PropertyRef Name="id_subject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_grade">
+          <End Role="grades" Type="Self.grades" Multiplicity="1" />
+          <End Role="classes" Type="Self.classes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="grades">
+              <PropertyRef Name="id_grade" />
+            </Principal>
+            <Dependent Role="classes">
+              <PropertyRef Name="id_grade" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_quests_of_test_questions">
+          <End Role="questions" Type="Self.questions" Multiplicity="1" />
+          <End Role="quests_of_test" Type="Self.quests_of_test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="questions">
+              <PropertyRef Name="id_question" />
+            </Principal>
+            <Dependent Role="quests_of_test">
+              <PropertyRef Name="id_question" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_quests_of_test_tests">
+          <End Role="tests" Type="Self.tests" Multiplicity="1" />
+          <End Role="quests_of_test" Type="Self.quests_of_test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tests">
+              <PropertyRef Name="test_code" />
+            </Principal>
+            <Dependent Role="quests_of_test">
+              <PropertyRef Name="test_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_scores_tests">
+          <End Role="tests" Type="Self.tests" Multiplicity="1" />
+          <End Role="scores" Type="Self.scores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tests">
+              <PropertyRef Name="test_code" />
+            </Principal>
+            <Dependent Role="scores">
+              <PropertyRef Name="test_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_speciality">
+          <End Role="specialities" Type="Self.specialities" Multiplicity="1" />
+          <End Role="classes" Type="Self.classes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="specialities">
+              <PropertyRef Name="id_speciality" />
+            </Principal>
+            <Dependent Role="classes">
+              <PropertyRef Name="id_speciality" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="admins" EntityType="Self.admins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="classes" EntityType="Self.classes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="grades" EntityType="Self.grades" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="permissions" EntityType="Self.permissions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="questions" EntityType="Self.questions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="quests_of_test" EntityType="Self.quests_of_test" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="scores" EntityType="Self.scores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="specialities" EntityType="Self.specialities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="statuses" EntityType="Self.statuses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="student_test_detail" EntityType="Self.student_test_detail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="students" EntityType="Self.students" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="subjects" EntityType="Self.subjects" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="teachers" EntityType="Self.teachers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tests" EntityType="Self.tests" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__admins__id_permi__46E78A0C" Association="Self.FK__admins__id_permi__46E78A0C">
+            <End Role="permissions" EntitySet="permissions" />
+            <End Role="admins" EntitySet="admins" />
+          </AssociationSet>
+          <AssociationSet Name="FK__questions__id_su__5629CD9C" Association="Self.FK__questions__id_su__5629CD9C">
+            <End Role="subjects" EntitySet="subjects" />
+            <End Role="questions" EntitySet="questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__scores__id_stude__60A75C0F" Association="Self.FK__scores__id_stude__60A75C0F">
+            <End Role="students" EntitySet="students" />
+            <End Role="scores" EntitySet="scores" />
+          </AssociationSet>
+          <AssociationSet Name="FK__students__id_cla__5070F446" Association="Self.FK__students__id_cla__5070F446">
+            <End Role="classes" EntitySet="classes" />
+            <End Role="students" EntitySet="students" />
+          </AssociationSet>
+          <AssociationSet Name="FK__students__id_per__4F7CD00D" Association="Self.FK__students__id_per__4F7CD00D">
+            <End Role="permissions" EntitySet="permissions" />
+            <End Role="students" EntitySet="students" />
+          </AssociationSet>
+          <AssociationSet Name="FK__students__id_spe__5165187F" Association="Self.FK__students__id_spe__5165187F">
+            <End Role="specialities" EntitySet="specialities" />
+            <End Role="students" EntitySet="students" />
+          </AssociationSet>
+          <AssociationSet Name="FK__teachers__id_per__4AB81AF0" Association="Self.FK__teachers__id_per__4AB81AF0">
+            <End Role="permissions" EntitySet="permissions" />
+            <End Role="teachers" EntitySet="teachers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__teachers__id_spe__4BAC3F29" Association="Self.FK__teachers__id_spe__4BAC3F29">
+            <End Role="specialities" EntitySet="specialities" />
+            <End Role="teachers" EntitySet="teachers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tests__id_status__59FA5E80" Association="Self.FK__tests__id_status__59FA5E80">
+            <End Role="statuses" EntitySet="statuses" />
+            <End Role="tests" EntitySet="tests" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tests__id_subjec__59063A47" Association="Self.FK__tests__id_subjec__59063A47">
+            <End Role="subjects" EntitySet="subjects" />
+            <End Role="tests" EntitySet="tests" />
+          </AssociationSet>
+          <AssociationSet Name="fk_grade" Association="Self.fk_grade">
+            <End Role="grades" EntitySet="grades" />
+            <End Role="classes" EntitySet="classes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_quests_of_test_questions" Association="Self.FK_quests_of_test_questions">
+            <End Role="questions" EntitySet="questions" />
+            <End Role="quests_of_test" EntitySet="quests_of_test" />
+          </AssociationSet>
+          <AssociationSet Name="FK_quests_of_test_tests" Association="Self.FK_quests_of_test_tests">
+            <End Role="tests" EntitySet="tests" />
+            <End Role="quests_of_test" EntitySet="quests_of_test" />
+          </AssociationSet>
+          <AssociationSet Name="FK_scores_tests" Association="Self.FK_scores_tests">
+            <End Role="tests" EntitySet="tests" />
+            <End Role="scores" EntitySet="scores" />
+          </AssociationSet>
+          <AssociationSet Name="fk_speciality" Association="Self.fk_speciality">
+            <End Role="specialities" EntitySet="specialities" />
+            <End Role="classes" EntitySet="classes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="admin">
+          <Key>
+            <PropertyRef Name="id_admin" />
+          </Key>
+          <Property Name="id_admin" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="username" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="avatar" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="gender" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="birthday" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="phone" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="id_permission" Type="Int32" Nullable="false" />
+          <Property Name="last_login" Type="DateTime" Precision="3" />
+          <Property Name="last_seen" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="last_seen_url" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="permission" Relationship="Self.FK__admins__id_permi__46E78A0C" FromRole="admins" ToRole="permissions" />
+        </EntityType>
+        <EntityType Name="class">
+          <Key>
+            <PropertyRef Name="id_class" />
+          </Key>
+          <Property Name="id_class" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="class_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="id_grade" Type="Int32" Nullable="false" />
+          <Property Name="id_speciality" Type="Int32" Nullable="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="students" Relationship="Self.FK__students__id_cla__5070F446" FromRole="classes" ToRole="students" />
+          <NavigationProperty Name="grade" Relationship="Self.fk_grade" FromRole="classes" ToRole="grades" />
+          <NavigationProperty Name="speciality" Relationship="Self.fk_speciality" FromRole="classes" ToRole="specialities" />
+        </EntityType>
+        <EntityType Name="grade">
+          <Key>
+            <PropertyRef Name="id_grade" />
+          </Key>
+          <Property Name="id_grade" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="grade_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="classes" Relationship="Self.fk_grade" FromRole="grades" ToRole="classes" />
+        </EntityType>
+        <EntityType Name="permission">
+          <Key>
+            <PropertyRef Name="id_permission" />
+          </Key>
+          <Property Name="id_permission" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="permission_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="admins" Relationship="Self.FK__admins__id_permi__46E78A0C" FromRole="permissions" ToRole="admins" />
+          <NavigationProperty Name="students" Relationship="Self.FK__students__id_per__4F7CD00D" FromRole="permissions" ToRole="students" />
+          <NavigationProperty Name="teachers" Relationship="Self.FK__teachers__id_per__4AB81AF0" FromRole="permissions" ToRole="teachers" />
+        </EntityType>
+        <EntityType Name="question">
+          <Key>
+            <PropertyRef Name="id_question" />
+          </Key>
+          <Property Name="id_question" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_subject" Type="Int32" Nullable="false" />
+          <Property Name="unit" Type="Int32" Nullable="false" />
+          <Property Name="img_content" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="answer_a" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="answer_b" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="answer_c" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="answer_d" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="correct_answer" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="subject" Relationship="Self.FK__questions__id_su__5629CD9C" FromRole="questions" ToRole="subjects" />
+          <NavigationProperty Name="quests_of_test" Relationship="Self.FK_quests_of_test_questions" FromRole="questions" ToRole="quests_of_test" />
+          <NavigationProperty Name="student_test_detail" Relationship="Model.FK__student_t__id_qu__42ACE4D4" FromRole="question" ToRole="student_test_detail" />
+        </EntityType>
+        <EntityType Name="quests_of_test">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="test_code" Type="Int32" Nullable="false" />
+          <Property Name="id_question" Type="Int32" Nullable="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="question" Relationship="Self.FK_quests_of_test_questions" FromRole="quests_of_test" ToRole="questions" />
+          <NavigationProperty Name="test" Relationship="Self.FK_quests_of_test_tests" FromRole="quests_of_test" ToRole="tests" />
+        </EntityType>
+        <EntityType Name="score">
+          <Key>
+            <PropertyRef Name="id_student" />
+            <PropertyRef Name="test_code" />
+          </Key>
+          <Property Name="id_score" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_student" Type="Int32" Nullable="false" />
+          <Property Name="test_code" Type="Int32" Nullable="false" />
+          <Property Name="time_finish" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="student" Relationship="Self.FK__scores__id_stude__60A75C0F" FromRole="scores" ToRole="students" />
+          <NavigationProperty Name="test" Relationship="Self.FK_scores_tests" FromRole="scores" ToRole="tests" />
+          <Property Name="score_number" Type="Double" Nullable="false" />
+          <Property Name="detail" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="speciality">
+          <Key>
+            <PropertyRef Name="id_speciality" />
+          </Key>
+          <Property Name="id_speciality" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="speciality_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="classes" Relationship="Self.fk_speciality" FromRole="specialities" ToRole="classes" />
+          <NavigationProperty Name="students" Relationship="Self.FK__students__id_spe__5165187F" FromRole="specialities" ToRole="students" />
+          <NavigationProperty Name="teachers" Relationship="Self.FK__teachers__id_spe__4BAC3F29" FromRole="specialities" ToRole="teachers" />
+        </EntityType>
+        <EntityType Name="status">
+          <Key>
+            <PropertyRef Name="id_status" />
+          </Key>
+          <Property Name="id_status" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="status_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tests" Relationship="Self.FK__tests__id_status__59FA5E80" FromRole="statuses" ToRole="tests" />
+        </EntityType>
+        <EntityType Name="student">
+          <Key>
+            <PropertyRef Name="id_student" />
+          </Key>
+          <Property Name="id_student" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="username" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="avatar" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="gender" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="birthday" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="phone" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="id_permission" Type="Int32" Nullable="false" />
+          <Property Name="id_class" Type="Int32" Nullable="false" />
+          <Property Name="id_speciality" Type="Int32" Nullable="false" />
+          <Property Name="is_testing" Type="Int32" />
+          <Property Name="time_start" Type="DateTime" Precision="3" />
+          <Property Name="time_remaining" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="last_login" Type="DateTime" Precision="3" />
+          <Property Name="last_seen" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="last_seen_url" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="class" Relationship="Self.FK__students__id_cla__5070F446" FromRole="students" ToRole="classes" />
+          <NavigationProperty Name="permission" Relationship="Self.FK__students__id_per__4F7CD00D" FromRole="students" ToRole="permissions" />
+          <NavigationProperty Name="scores" Relationship="Self.FK__scores__id_stude__60A75C0F" FromRole="students" ToRole="scores" />
+          <NavigationProperty Name="speciality" Relationship="Self.FK__students__id_spe__5165187F" FromRole="students" ToRole="specialities" />
+          <NavigationProperty Name="student_test_detail" Relationship="Model.FK__student_t__id_st__41B8C09B" FromRole="student" ToRole="student_test_detail" />
+        </EntityType>
+        <EntityType Name="subject">
+          <Key>
+            <PropertyRef Name="id_subject" />
+          </Key>
+          <Property Name="id_subject" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="subject_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="questions" Relationship="Self.FK__questions__id_su__5629CD9C" FromRole="subjects" ToRole="questions" />
+          <NavigationProperty Name="tests" Relationship="Self.FK__tests__id_subjec__59063A47" FromRole="subjects" ToRole="tests" />
+        </EntityType>
+        <EntityType Name="teacher">
+          <Key>
+            <PropertyRef Name="id_teacher" />
+          </Key>
+          <Property Name="id_teacher" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="username" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="avatar" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="gender" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="birthday" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="phone" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="id_permission" Type="Int32" Nullable="false" />
+          <Property Name="id_speciality" Type="Int32" Nullable="false" />
+          <Property Name="last_login" Type="DateTime" Precision="3" />
+          <Property Name="last_seen" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="last_seen_url" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="permission" Relationship="Self.FK__teachers__id_per__4AB81AF0" FromRole="teachers" ToRole="permissions" />
+          <NavigationProperty Name="speciality" Relationship="Self.FK__teachers__id_spe__4BAC3F29" FromRole="teachers" ToRole="specialities" />
+        </EntityType>
+        <EntityType Name="test">
+          <Key>
+            <PropertyRef Name="test_code" />
+          </Key>
+          <Property Name="test_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="test_code" Type="Int32" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="id_subject" Type="Int32" Nullable="false" />
+          <Property Name="total_questions" Type="Int32" Nullable="false" />
+          <Property Name="time_to_do" Type="Int32" Nullable="false" />
+          <Property Name="note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="id_status" Type="Int32" Nullable="false" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="quests_of_test" Relationship="Self.FK_quests_of_test_tests" FromRole="tests" ToRole="quests_of_test" />
+          <NavigationProperty Name="scores" Relationship="Self.FK_scores_tests" FromRole="tests" ToRole="scores" />
+          <NavigationProperty Name="status" Relationship="Self.FK__tests__id_status__59FA5E80" FromRole="tests" ToRole="statuses" />
+          <NavigationProperty Name="subject" Relationship="Self.FK__tests__id_subjec__59063A47" FromRole="tests" ToRole="subjects" />
+        </EntityType>
+        <Association Name="FK__admins__id_permi__46E78A0C">
+          <End Role="permissions" Type="Self.permission" Multiplicity="1" />
+          <End Role="admins" Type="Self.admin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="permissions">
+              <PropertyRef Name="id_permission" />
+            </Principal>
+            <Dependent Role="admins">
+              <PropertyRef Name="id_permission" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__students__id_cla__5070F446">
+          <End Role="classes" Type="Self.class" Multiplicity="1" />
+          <End Role="students" Type="Self.student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="classes">
+              <PropertyRef Name="id_class" />
+            </Principal>
+            <Dependent Role="students">
+              <PropertyRef Name="id_class" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_grade">
+          <End Role="grades" Type="Self.grade" Multiplicity="1" />
+          <End Role="classes" Type="Self.class" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="grades">
+              <PropertyRef Name="id_grade" />
+            </Principal>
+            <Dependent Role="classes">
+              <PropertyRef Name="id_grade" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_speciality">
+          <End Role="specialities" Type="Self.speciality" Multiplicity="1" />
+          <End Role="classes" Type="Self.class" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="specialities">
+              <PropertyRef Name="id_speciality" />
+            </Principal>
+            <Dependent Role="classes">
+              <PropertyRef Name="id_speciality" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__students__id_per__4F7CD00D">
+          <End Role="permissions" Type="Self.permission" Multiplicity="1" />
+          <End Role="students" Type="Self.student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="permissions">
+              <PropertyRef Name="id_permission" />
+            </Principal>
+            <Dependent Role="students">
+              <PropertyRef Name="id_permission" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__teachers__id_per__4AB81AF0">
+          <End Role="permissions" Type="Self.permission" Multiplicity="1" />
+          <End Role="teachers" Type="Self.teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="permissions">
+              <PropertyRef Name="id_permission" />
+            </Principal>
+            <Dependent Role="teachers">
+              <PropertyRef Name="id_permission" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__questions__id_su__5629CD9C">
+          <End Role="subjects" Type="Self.subject" Multiplicity="1" />
+          <End Role="questions" Type="Self.question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="subjects">
+              <PropertyRef Name="id_subject" />
+            </Principal>
+            <Dependent Role="questions">
+              <PropertyRef Name="id_subject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_quests_of_test_questions">
+          <End Role="questions" Type="Self.question" Multiplicity="1" />
+          <End Role="quests_of_test" Type="Self.quests_of_test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="questions">
+              <PropertyRef Name="id_question" />
+            </Principal>
+            <Dependent Role="quests_of_test">
+              <PropertyRef Name="id_question" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_quests_of_test_tests">
+          <End Role="tests" Type="Self.test" Multiplicity="1" />
+          <End Role="quests_of_test" Type="Self.quests_of_test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tests">
+              <PropertyRef Name="test_code" />
+            </Principal>
+            <Dependent Role="quests_of_test">
+              <PropertyRef Name="test_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__scores__id_stude__60A75C0F">
+          <End Role="students" Type="Self.student" Multiplicity="1" />
+          <End Role="scores" Type="Self.score" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="students">
+              <PropertyRef Name="id_student" />
+            </Principal>
+            <Dependent Role="scores">
+              <PropertyRef Name="id_student" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_scores_tests">
+          <End Role="tests" Type="Self.test" Multiplicity="1" />
+          <End Role="scores" Type="Self.score" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tests">
+              <PropertyRef Name="test_code" />
+            </Principal>
+            <Dependent Role="scores">
+              <PropertyRef Name="test_code" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__students__id_spe__5165187F">
+          <End Role="specialities" Type="Self.speciality" Multiplicity="1" />
+          <End Role="students" Type="Self.student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="specialities">
+              <PropertyRef Name="id_speciality" />
+            </Principal>
+            <Dependent Role="students">
+              <PropertyRef Name="id_speciality" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__teachers__id_spe__4BAC3F29">
+          <End Role="specialities" Type="Self.speciality" Multiplicity="1" />
+          <End Role="teachers" Type="Self.teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="specialities">
+              <PropertyRef Name="id_speciality" />
+            </Principal>
+            <Dependent Role="teachers">
+              <PropertyRef Name="id_speciality" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tests__id_status__59FA5E80">
+          <End Role="statuses" Type="Self.status" Multiplicity="1" />
+          <End Role="tests" Type="Self.test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="statuses">
+              <PropertyRef Name="id_status" />
+            </Principal>
+            <Dependent Role="tests">
+              <PropertyRef Name="id_status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tests__id_subjec__59063A47">
+          <End Role="subjects" Type="Self.subject" Multiplicity="1" />
+          <End Role="tests" Type="Self.test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="subjects">
+              <PropertyRef Name="id_subject" />
+            </Principal>
+            <Dependent Role="tests">
+              <PropertyRef Name="id_subject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="trac_nghiem_onlineEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="admins" EntityType="Self.admin" />
+          <EntitySet Name="classes" EntityType="Self.class" />
+          <EntitySet Name="grades" EntityType="Self.grade" />
+          <EntitySet Name="permissions" EntityType="Self.permission" />
+          <EntitySet Name="questions" EntityType="Self.question" />
+          <EntitySet Name="quests_of_test" EntityType="Self.quests_of_test" />
+          <EntitySet Name="scores" EntityType="Self.score" />
+          <EntitySet Name="specialities" EntityType="Self.speciality" />
+          <EntitySet Name="statuses" EntityType="Self.status" />
+          <EntitySet Name="students" EntityType="Self.student" />
+          <EntitySet Name="subjects" EntityType="Self.subject" />
+          <EntitySet Name="teachers" EntityType="Self.teacher" />
+          <EntitySet Name="tests" EntityType="Self.test" />
+          <AssociationSet Name="FK__admins__id_permi__46E78A0C" Association="Self.FK__admins__id_permi__46E78A0C">
+            <End Role="permissions" EntitySet="permissions" />
+            <End Role="admins" EntitySet="admins" />
+          </AssociationSet>
+          <AssociationSet Name="FK__students__id_cla__5070F446" Association="Self.FK__students__id_cla__5070F446">
+            <End Role="classes" EntitySet="classes" />
+            <End Role="students" EntitySet="students" />
+          </AssociationSet>
+          <AssociationSet Name="fk_grade" Association="Self.fk_grade">
+            <End Role="grades" EntitySet="grades" />
+            <End Role="classes" EntitySet="classes" />
+          </AssociationSet>
+          <AssociationSet Name="fk_speciality" Association="Self.fk_speciality">
+            <End Role="specialities" EntitySet="specialities" />
+            <End Role="classes" EntitySet="classes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__students__id_per__4F7CD00D" Association="Self.FK__students__id_per__4F7CD00D">
+            <End Role="permissions" EntitySet="permissions" />
+            <End Role="students" EntitySet="students" />
+          </AssociationSet>
+          <AssociationSet Name="FK__teachers__id_per__4AB81AF0" Association="Self.FK__teachers__id_per__4AB81AF0">
+            <End Role="permissions" EntitySet="permissions" />
+            <End Role="teachers" EntitySet="teachers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__questions__id_su__5629CD9C" Association="Self.FK__questions__id_su__5629CD9C">
+            <End Role="subjects" EntitySet="subjects" />
+            <End Role="questions" EntitySet="questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_quests_of_test_questions" Association="Self.FK_quests_of_test_questions">
+            <End Role="questions" EntitySet="questions" />
+            <End Role="quests_of_test" EntitySet="quests_of_test" />
+          </AssociationSet>
+          <AssociationSet Name="FK_quests_of_test_tests" Association="Self.FK_quests_of_test_tests">
+            <End Role="tests" EntitySet="tests" />
+            <End Role="quests_of_test" EntitySet="quests_of_test" />
+          </AssociationSet>
+          <AssociationSet Name="FK__scores__id_stude__60A75C0F" Association="Self.FK__scores__id_stude__60A75C0F">
+            <End Role="students" EntitySet="students" />
+            <End Role="scores" EntitySet="scores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_scores_tests" Association="Self.FK_scores_tests">
+            <End Role="tests" EntitySet="tests" />
+            <End Role="scores" EntitySet="scores" />
+          </AssociationSet>
+          <AssociationSet Name="FK__students__id_spe__5165187F" Association="Self.FK__students__id_spe__5165187F">
+            <End Role="specialities" EntitySet="specialities" />
+            <End Role="students" EntitySet="students" />
+          </AssociationSet>
+          <AssociationSet Name="FK__teachers__id_spe__4BAC3F29" Association="Self.FK__teachers__id_spe__4BAC3F29">
+            <End Role="specialities" EntitySet="specialities" />
+            <End Role="teachers" EntitySet="teachers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tests__id_status__59FA5E80" Association="Self.FK__tests__id_status__59FA5E80">
+            <End Role="statuses" EntitySet="statuses" />
+            <End Role="tests" EntitySet="tests" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tests__id_subjec__59063A47" Association="Self.FK__tests__id_subjec__59063A47">
+            <End Role="subjects" EntitySet="subjects" />
+            <End Role="tests" EntitySet="tests" />
+          </AssociationSet>
+          <EntitySet Name="student_test_detail" EntityType="Model.student_test_detail" />
+          <AssociationSet Name="FK__student_t__id_qu__42ACE4D4" Association="Model.FK__student_t__id_qu__42ACE4D4">
+            <End Role="question" EntitySet="questions" />
+            <End Role="student_test_detail" EntitySet="student_test_detail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__student_t__id_st__41B8C09B" Association="Model.FK__student_t__id_st__41B8C09B">
+            <End Role="student" EntitySet="students" />
+            <End Role="student_test_detail" EntitySet="student_test_detail" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="student_test_detail">
+          <Key>
+            <PropertyRef Name="id_student" />
+            <PropertyRef Name="id_question" />
+            <PropertyRef Name="test_code" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_student" Type="Int32" Nullable="false" />
+          <Property Name="id_question" Type="Int32" Nullable="false" />
+          <Property Name="answer_a" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="answer_b" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="answer_c" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="answer_d" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="student_answer" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="timestamps" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="question" Relationship="Model.FK__student_t__id_qu__42ACE4D4" FromRole="student_test_detail" ToRole="question" />
+          <NavigationProperty Name="student" Relationship="Model.FK__student_t__id_st__41B8C09B" FromRole="student_test_detail" ToRole="student" />
+          <Property Name="test_code" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__student_t__id_qu__42ACE4D4">
+          <End Type="Model.question" Role="question" Multiplicity="1" />
+          <End Type="Model.student_test_detail" Role="student_test_detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="question">
+              <PropertyRef Name="id_question" />
+            </Principal>
+            <Dependent Role="student_test_detail">
+              <PropertyRef Name="id_question" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__student_t__id_st__41B8C09B">
+          <End Type="Model.student" Role="student" Multiplicity="1" />
+          <End Type="Model.student_test_detail" Role="student_test_detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="id_student" />
+            </Principal>
+            <Dependent Role="student_test_detail">
+              <PropertyRef Name="id_student" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="trac_nghiem_onlineEntities">
+          <EntitySetMapping Name="admins">
+            <EntityTypeMapping TypeName="Model.admin">
+              <MappingFragment StoreEntitySet="admins">
+                <ScalarProperty Name="id_admin" ColumnName="id_admin" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="avatar" ColumnName="avatar" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="birthday" ColumnName="birthday" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="id_permission" ColumnName="id_permission" />
+                <ScalarProperty Name="last_login" ColumnName="last_login" />
+                <ScalarProperty Name="last_seen" ColumnName="last_seen" />
+                <ScalarProperty Name="last_seen_url" ColumnName="last_seen_url" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="classes">
+            <EntityTypeMapping TypeName="Model.class">
+              <MappingFragment StoreEntitySet="classes">
+                <ScalarProperty Name="id_class" ColumnName="id_class" />
+                <ScalarProperty Name="class_name" ColumnName="class_name" />
+                <ScalarProperty Name="id_grade" ColumnName="id_grade" />
+                <ScalarProperty Name="id_speciality" ColumnName="id_speciality" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="grades">
+            <EntityTypeMapping TypeName="Model.grade">
+              <MappingFragment StoreEntitySet="grades">
+                <ScalarProperty Name="id_grade" ColumnName="id_grade" />
+                <ScalarProperty Name="grade_name" ColumnName="grade_name" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="permissions">
+            <EntityTypeMapping TypeName="Model.permission">
+              <MappingFragment StoreEntitySet="permissions">
+                <ScalarProperty Name="id_permission" ColumnName="id_permission" />
+                <ScalarProperty Name="permission_name" ColumnName="permission_name" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="questions">
+            <EntityTypeMapping TypeName="Model.question">
+              <MappingFragment StoreEntitySet="questions">
+                <ScalarProperty Name="id_question" ColumnName="id_question" />
+                <ScalarProperty Name="id_subject" ColumnName="id_subject" />
+                <ScalarProperty Name="unit" ColumnName="unit" />
+                <ScalarProperty Name="img_content" ColumnName="img_content" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="answer_a" ColumnName="answer_a" />
+                <ScalarProperty Name="answer_b" ColumnName="answer_b" />
+                <ScalarProperty Name="answer_c" ColumnName="answer_c" />
+                <ScalarProperty Name="answer_d" ColumnName="answer_d" />
+                <ScalarProperty Name="correct_answer" ColumnName="correct_answer" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="quests_of_test">
+            <EntityTypeMapping TypeName="Model.quests_of_test">
+              <MappingFragment StoreEntitySet="quests_of_test">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="test_code" ColumnName="test_code" />
+                <ScalarProperty Name="id_question" ColumnName="id_question" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="scores">
+            <EntityTypeMapping TypeName="Model.score">
+              <MappingFragment StoreEntitySet="scores">
+                <ScalarProperty Name="detail" ColumnName="detail" />
+                <ScalarProperty Name="score_number" ColumnName="score_number" />
+                <ScalarProperty Name="id_score" ColumnName="id_score" />
+                <ScalarProperty Name="id_student" ColumnName="id_student" />
+                <ScalarProperty Name="test_code" ColumnName="test_code" />
+                <ScalarProperty Name="time_finish" ColumnName="time_finish" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="specialities">
+            <EntityTypeMapping TypeName="Model.speciality">
+              <MappingFragment StoreEntitySet="specialities">
+                <ScalarProperty Name="id_speciality" ColumnName="id_speciality" />
+                <ScalarProperty Name="speciality_name" ColumnName="speciality_name" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="statuses">
+            <EntityTypeMapping TypeName="Model.status">
+              <MappingFragment StoreEntitySet="statuses">
+                <ScalarProperty Name="id_status" ColumnName="id_status" />
+                <ScalarProperty Name="status_name" ColumnName="status_name" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="students">
+            <EntityTypeMapping TypeName="Model.student">
+              <MappingFragment StoreEntitySet="students">
+                <ScalarProperty Name="id_student" ColumnName="id_student" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="avatar" ColumnName="avatar" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="birthday" ColumnName="birthday" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="id_permission" ColumnName="id_permission" />
+                <ScalarProperty Name="id_class" ColumnName="id_class" />
+                <ScalarProperty Name="id_speciality" ColumnName="id_speciality" />
+                <ScalarProperty Name="is_testing" ColumnName="is_testing" />
+                <ScalarProperty Name="time_start" ColumnName="time_start" />
+                <ScalarProperty Name="time_remaining" ColumnName="time_remaining" />
+                <ScalarProperty Name="last_login" ColumnName="last_login" />
+                <ScalarProperty Name="last_seen" ColumnName="last_seen" />
+                <ScalarProperty Name="last_seen_url" ColumnName="last_seen_url" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="subjects">
+            <EntityTypeMapping TypeName="Model.subject">
+              <MappingFragment StoreEntitySet="subjects">
+                <ScalarProperty Name="id_subject" ColumnName="id_subject" />
+                <ScalarProperty Name="subject_name" ColumnName="subject_name" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="teachers">
+            <EntityTypeMapping TypeName="Model.teacher">
+              <MappingFragment StoreEntitySet="teachers">
+                <ScalarProperty Name="id_teacher" ColumnName="id_teacher" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="avatar" ColumnName="avatar" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="birthday" ColumnName="birthday" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="id_permission" ColumnName="id_permission" />
+                <ScalarProperty Name="id_speciality" ColumnName="id_speciality" />
+                <ScalarProperty Name="last_login" ColumnName="last_login" />
+                <ScalarProperty Name="last_seen" ColumnName="last_seen" />
+                <ScalarProperty Name="last_seen_url" ColumnName="last_seen_url" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tests">
+            <EntityTypeMapping TypeName="Model.test">
+              <MappingFragment StoreEntitySet="tests">
+                <ScalarProperty Name="test_name" ColumnName="test_name" />
+                <ScalarProperty Name="test_code" ColumnName="test_code" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="id_subject" ColumnName="id_subject" />
+                <ScalarProperty Name="total_questions" ColumnName="total_questions" />
+                <ScalarProperty Name="time_to_do" ColumnName="time_to_do" />
+                <ScalarProperty Name="note" ColumnName="note" />
+                <ScalarProperty Name="id_status" ColumnName="id_status" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="student_test_detail">
+            <EntityTypeMapping TypeName="Model.student_test_detail">
+              <MappingFragment StoreEntitySet="student_test_detail">
+                <ScalarProperty Name="test_code" ColumnName="test_code" />
+                <ScalarProperty Name="timestamps" ColumnName="timestamps" />
+                <ScalarProperty Name="student_answer" ColumnName="student_answer" />
+                <ScalarProperty Name="answer_d" ColumnName="answer_d" />
+                <ScalarProperty Name="answer_c" ColumnName="answer_c" />
+                <ScalarProperty Name="answer_b" ColumnName="answer_b" />
+                <ScalarProperty Name="answer_a" ColumnName="answer_a" />
+                <ScalarProperty Name="id_question" ColumnName="id_question" />
+                <ScalarProperty Name="id_student" ColumnName="id_student" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,71 @@
+﻿@using TracNghiemOnline.Models
+@{
+    ViewBag.Title = "Trang Chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ListTest = Model as List<TestViewModel>;
+    var Scores = ViewBag.score as List<int>;
+}
+
+<div class="title-content">
+    <span class="title">@ViewBag.Title</span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content row col s12 reset-margin">
+    @foreach (var item in ListTest)
+    {
+        <div class="col s6 m4 l3">
+            <div class="dashboard-inner-item" style="padding: 10px;">
+                <span class="title">Môn: <b>@item.subject.subject_name</b></span><br />
+                <span class="title">Mã đề: <b>@item.test.test_code</b></span><br />
+                <span class="title">Kỳ thi: <b>@item.test.test_name</b></span><br />
+                <span class="title">Số câu hỏi: <b>@item.test.total_questions</b></span><br />
+                <span class="title">Thời gian: <b>@item.test.time_to_do (phút)</b></span><br />
+                <span class="title">Ghi chú: <b>@item.test.note</b></span><br />
+                <span class="title">Trạng thái: <b>@item.status.status_name</b></span><br />
+                @if (item.status.id_status == 1)
+                {
+                    if (Scores.IndexOf(item.test.test_code) != -1)
+                    {
+                        <a class="btn full-width" href="@Url.Action("PreviewTest/" + @item.test.test_code)">Chi tiết bài làm</a>
+                    }
+                    else
+                    {
+                        <a href="#enter-test-@item.test.test_code" class="btn full-width modal-trigger" data-code="@item.test.test_code" id="enter-ex">Làm bài</a>
+                    }
+                }
+                else if (item.status.id_status == 2)
+                {
+                    <a class="btn full-width" href="@Url.Action("PreviewTest/" + @item.test.test_code)">Chi tiết bài làm</a>
+                }
+            </div>
+        </div>
+        <!-- Modal Structure -->
+        using (Html.BeginForm("CheckPassword", "Student", FormMethod.Post))
+        {
+            <div id="enter-test-@item.test.test_code" class="modal">
+                <div class="modal-content">
+                    <h4>Nhập Mật Khẩu Đề Thi @item.test.test_code</h4>
+                    <input type="text" name="test_code" value="@item.test.test_code" hidden>
+                    <div class="input-field">
+                        <label for="email">Mật Khẩu<span class="failed">(*)</span></label>
+                        <input type="password" name="password" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                    <button type="submit" class="modal-close waves-effect waves-green btn-flat">Xác nhận</button>
+                </div>
+            </div>
+        }
+    }
+    </div>
+<script>
+    $('.modal').modal();
+</script>

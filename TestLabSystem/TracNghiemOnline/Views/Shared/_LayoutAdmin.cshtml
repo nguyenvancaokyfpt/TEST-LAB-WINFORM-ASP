@@ -1,0 +1,63 @@
+﻿@using TracNghiemOnline.Common
+@{
+    ViewBag.Websitename = "Hệ Thống Trắc Nghiệm Online";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        @ViewBag.Title
+    </title>
+    <link rel="stylesheet" href="~/Assets/css/normalize.css">
+    <link rel="stylesheet" href="~/Assets/css/style.min.css">
+    <link rel="stylesheet" href="~/Assets/css/font-awesome.css">
+    <link rel="stylesheet" href="~/Assets/css/materialize.min.css">
+    <link rel="stylesheet" href="~/Assets/DataTables/css/jquery.dataTables.css">
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Assets/js/materialize.min.js"></script>
+    <script src="~/Assets/DataTables/js/jquery.dataTables.js"></script>
+</head>
+
+<body class="body-login scrollbar">
+    <div class="navbar-fixed">
+        <nav style="display:contents">
+            <div class="container">
+                <div class="nav-wrapper nav-fpt" style="line-height:51px;">
+                    <a href="/" class="brand-logo cursor left"><i class="material-icons">home</i></a>
+                    <div class="right">
+                        <span class="title">Xin chào: @Session[UserSession.NAME]</span>
+                        <!-- Dropdown Trigger -->
+                        <a class='dropdown-trigger btn-menu' href='#' data-target='dropdown-menu'>Chức Năng<span class="material-icons">arrow_drop_down</span></a>
+
+                        <!-- Dropdown Structure -->
+                        <ul id='dropdown-menu' class='dropdown-content'>
+                            <li><a href="@Url.Action("AdminManager")"><i class="material-icons">account_box</i>Quản Lý Admin</a></li>
+                            <li><a href="@Url.Action("TeacherManager")"><i class="material-icons">assignment_ind</i>Quản Lý Giảng Viên</a></li>
+                            <li><a href="@Url.Action("StudentManager")"><i class="material-icons">group</i>Quản Lý Sinh Viên</a></li>
+                            <li><a href="@Url.Action("ClassManager")"><i class="material-icons">assignment</i>Quản Lý Khóa/Lớp</a></li>
+                            <li><a href="@Url.Action("SpecialityManager")"><i class="material-icons">book</i>Quản Lý Ngành</a></li>
+                            <li><a href="@Url.Action("SubjectManager")"><i class="material-icons">collections_bookmark</i>Quản Lý Môn Học</a></li>
+                            <li><a href="@Url.Action("QuestionManager")"><i class="material-icons">format_align_left</i>Quản Lý Câu Hỏi</a></li>
+                            <li><a href="@Url.Action("TestManager")"><i class="material-icons">event_available</i>Quản Lý Bài Thi</a></li>
+                            <li class="divider" tabindex="-1"></li>
+                            <li><a href="@Url.Action("Logout")">Đăng xuất<i class="material-icons">close</i></a></li>
+                        </ul>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <script>
+        $('.dropdown-trigger').dropdown();
+    </script>
+</body>
+
+</html>

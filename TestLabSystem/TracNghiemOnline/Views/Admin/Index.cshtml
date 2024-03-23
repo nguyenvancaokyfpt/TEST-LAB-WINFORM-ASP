@@ -1,0 +1,165 @@
+﻿
+@{
+    ViewBag.Title = "Tổng Quan";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var ListCount = (Dictionary<string, int>)Model;
+}
+
+<div class="title-content">
+    <span class="title">@ViewBag.Title</span>
+</div>
+<div class="content row col s12 reset-margin">
+    <div class="col s6 m4 l3">
+        <a href="@Url.Action("AdminManager")">
+            <div class="dashboard-inner-item">
+                <div class="left-item">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+                <div class="right-item">
+                    <div class="right-item-top">
+                        @ListCount["CountAdmin"]
+                    </div>
+                    <div class="right-item-bottom">
+                        Quản Trị Viên
+                    </div>
+                </div><div class="clear"></div>
+            </div>
+        </a>
+    </div>
+    <div class="col s6 m4 l3">
+        <a href="@Url.Action("TeacherManager")">
+            <div class="dashboard-inner-item">
+                <div class="left-item">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+                <div class="right-item">
+                    <div class="right-item-top">
+                        @ListCount["CountTeacher"]
+                    </div>
+                    <div class="right-item-bottom">
+                        Giảng Viên
+                    </div>
+                </div><div class="clear"></div>
+            </div>
+        </a>
+    </div>
+    <div class="col s6 m4 l3">
+        <a href="@Url.Action("StudentManager")">
+            <div class="dashboard-inner-item">
+                <div class="left-item">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+                <div class="right-item">
+                    <div class="right-item-top">
+                        @ListCount["CountStudent"]
+                    </div>
+                    <div class="right-item-bottom">
+                        Sinh Viên
+                    </div>
+                </div><div class="clear"></div>
+            </div>
+         </a>
+    </div>
+    <div class="col s6 m4 l3">
+        <a href="@Url.Action("ClassManager")">
+            <div class="dashboard-inner-item">
+                <div class="left-item">
+                    <i class="fa fa-archive fa-2x"></i>
+                </div>
+                <div class="right-item">
+                    <div class="right-item-top">
+                        @ListCount["CountGrade"]
+                    </div>
+                    <div class="right-item-bottom">
+                        Khóa
+                    </div>
+                </div><div class="clear"></div>
+            </div>
+        </a>
+    </div>
+    <div class="col s6 m4 l3">
+        <a href="@Url.Action("ClassManager")">
+            <div class="dashboard-inner-item">
+                <div class="left-item">
+                    <i class="fa fa-archive fa-2x"></i>
+                </div>
+                <div class="right-item">
+                    <div class="right-item-top">
+                        @ListCount["CountClass"]
+                    </div>
+                    <div class="right-item-bottom">
+                        Lớp
+                    </div>
+                </div><div class="clear"></div>
+            </div>
+        </a>
+    </div>
+    <div class="col s6 m4 l3">
+        <a href="@Url.Action("SpecialityManager")">
+            <div class="dashboard-inner-item">
+                <div class="left-item">
+                    <i class="fa fa-book fa-2x"></i>
+                </div>
+                <div class="right-item">
+                    <div class="right-item-top">
+                        @ListCount["CountSpeciality"]
+                    </div>
+                    <div class="right-item-bottom">
+                        Ngành
+                    </div>
+                </div><div class="clear"></div>
+            </div>
+        </a>
+    </div>
+    <div class="col s6 m4 l3">
+        <a href="@Url.Action("SubjectManager")">
+            <div class="dashboard-inner-item">
+                <div class="left-item">
+                    <i class="fa fa-book fa-2x"></i>
+                </div>
+                <div class="right-item">
+                    <div class="right-item-top">
+                        @ListCount["CountSubject"]
+                    </div>
+                    <div class="right-item-bottom">
+                        Môn
+                    </div>
+                </div><div class="clear"></div>
+            </div>
+        </a>
+    </div>
+    <div class="col s6 m4 l3">
+        <a href="@Url.Action("QuestionManager")">
+            <div class="dashboard-inner-item">
+                <div class="left-item">
+                    <i class="fa fa-question fa-2x"></i>
+                </div>
+                <div class="right-item">
+                    <div class="right-item-top">
+                        @ListCount["CountQuestion"]
+                    </div>
+                    <div class="right-item-bottom">
+                        Câu Hỏi
+                    </div>
+                </div><div class="clear"></div>
+            </div>
+        </a>
+    </div>
+    <div class="col s6 m4 l3">
+        <a href="@Url.Action("TestManager")">
+            <div class="dashboard-inner-item">
+                <div class="left-item">
+                    <i class="fa fa-hourglass fa-2x"></i>
+                </div>
+                <div class="right-item">
+                    <div class="right-item-top">
+                        @ListCount["CountTest"]
+                    </div>
+                    <div class="right-item-bottom">
+                        Bài Thi
+                    </div>
+                </div><div class="clear"></div>
+            </div>
+        </a>
+    </div>
+</div>

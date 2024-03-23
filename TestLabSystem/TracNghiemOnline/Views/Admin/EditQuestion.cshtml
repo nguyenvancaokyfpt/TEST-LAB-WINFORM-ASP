@@ -1,0 +1,126 @@
+﻿@using TracNghiemOnline.Models
+@{
+    var question = Model as question;
+    ViewBag.Title = "Sửa Câu Hỏi " + question.id_question;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var ListSubject = ViewBag.ListSubject as List<subject>;
+}
+
+<div class="title-content">
+    <a class="title" href="@Url.Action("QuestionManager")">Quay Lại</a>
+    <span class="title">@ViewBag.Title</span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content">
+    <div class="row">
+        <div id="add_normal" class="col s12">
+            @using (Html.BeginForm("EditQuestion", "Admin", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+            {
+                <input type="hidden" id="id_question" name="id_question" required value="@question.id_question" class="hidden">
+                <div class="input-field">
+                    <select name="id_subject">
+                        @foreach (var subject in ListSubject)
+                        {
+                            if (subject.id_subject == question.id_subject)
+                            {
+                                <option value="@subject.id_subject" selected>@subject.subject_name</option>
+                            }
+                            else
+                            {
+                                <option value="@subject.id_subject">@subject.subject_name</option>
+                            }
+                        }
+                    </select>
+                    <label>Môn</label>
+                </div>
+                <div class="input-field">
+                    <input id="number" type="number" name="unit" value="@question.unit">
+                    <label for="number">Chương <span class="failed">(*)</span></label>
+                </div>
+                <div class="input-field">
+                    <textarea name="content" class="materialize-textarea" required>@question.content</textarea>
+                    <label for="content">Nội Dung Câu Hỏi <span class="failed">(*)</span></label>
+                </div>
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>Nội Dung Ảnh (Tùy Chọn)</span>
+                        <input type="file" name="file">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="Chỉ hỗ trợ ảnh đuôi .PNG .png .JPG .jpg">
+                    </div>
+                </div>
+                <div class="input-field">
+                    <textarea name="answer_a" id="answer_a" class="materialize-textarea" onchange="get_val(this.id)" required>@question.answer_a</textarea>
+                    <label for="answer_a">Đáp Án A <span class="failed">(*)</span></label>
+                </div>
+                <div class="input-field">
+                    <textarea name="answer_b" id="answer_b" class="materialize-textarea" onchange="get_val(this.id)" required>@question.answer_b</textarea>
+                    <label for="answer_b">Đáp Án B <span class="failed">(*)</span></label>
+                </div>
+                <div class="input-field">
+                    <textarea name="answer_c" id="answer_c" class="materialize-textarea" onchange="get_val(this.id)" required>@question.answer_c</textarea>
+                    <label for="answer_c">Đáp Án C <span class="failed">(*)</span></label>
+                </div>
+                <div class="input-field">
+                    <textarea name="answer_d" id="answer_d" class="materialize-textarea" onchange="get_val(this.id)" required>@question.answer_d</textarea>
+                    <label for="answer_d">Đáp Án D <span class="failed">(*)</span></label>
+                </div>
+                <div class="input-field">
+                    <select name="correct_answer">
+                        @if (question.correct_answer.Equals(question.answer_a))
+                        {
+                            <option value="@question.answer_a" id="val_answer_a" selected>A</option>
+                        }
+                        else
+                        {
+                            <option value="@question.answer_a" id="val_answer_a">A</option>
+                        }
+                        @if (question.correct_answer.Equals(question.answer_b))
+                        {
+                            <option value="@question.answer_b" id="val_answer_b" selected>B</option>
+                        }
+                        else
+                        {
+                            <option value="@question.answer_b" id="val_answer_b">B</option>
+                        }
+                        @if (question.correct_answer.Equals(question.answer_c))
+                        {
+                            <option value="@question.answer_c" id="val_answer_c" selected>C</option>
+                        }
+                        else
+                        {
+                            <option value="@question.answer_c" id="val_answer_c">C</option>
+                        }
+                        @if (question.correct_answer.Equals(question.answer_d))
+                        {
+                            <option value="@question.answer_d" id="val_answer_d" selected>D</option>
+                        }
+                        else
+                        {
+                            <option value="@question.answer_d" id="val_answer_d">D</option>
+                        }
+                    </select>
+                    <label>Đáp Án Đúng</label>
+                </div>
+                <button type="submit" class="btn full-width" id="add-question" name="add-question">Sửa</button>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $('select').select();
+    function get_val(id) {
+        var answer = $("#" + id).val();
+        $("#val_" + id).val(answer);
+    }
+</script>
+
+

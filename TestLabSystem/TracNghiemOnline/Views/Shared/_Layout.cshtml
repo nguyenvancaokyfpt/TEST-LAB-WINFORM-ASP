@@ -1,0 +1,46 @@
+﻿@using TracNghiemOnline.Common
+@{
+    ViewBag.name = "Hệ Thống Trắc Nghiệm Online";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        @ViewBag.Title
+    </title>
+    <link rel="stylesheet" href="~/Assets/css/normalize.css">
+    <link rel="stylesheet" href="~/Assets/css/style.min.css">
+    <link rel="stylesheet" href="~/Assets/css/font-awesome.css">
+    <link rel="stylesheet" href="~/Assets/css/materialize.min.css">
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Assets/js/materialize.min.js"></script>
+</head>
+
+<body class="body-login scrollbar">
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper nav-fpt">
+                <a href="/" class="brand-logo cursor left"><i class="material-icons">home</i></a>
+                <div class="right">
+                    <span class="title">Xin chào: @Session[UserSession.NAME]</span>
+                        @Html.ActionLink("Đăng xuất", "Logout")
+                </div>
+            </div>
+        </nav>
+    </div>
+
+        @RenderBody()
+
+        <div class="col l12 footer" id="footer">
+            <div class="row reset-margin">
+                <div class="col l6 s6 right-align">
+                    <i id="website-title">@ViewBag.name</i>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>

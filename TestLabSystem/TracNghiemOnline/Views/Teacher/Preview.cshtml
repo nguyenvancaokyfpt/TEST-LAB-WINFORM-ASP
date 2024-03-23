@@ -1,0 +1,52 @@
+﻿@using TracNghiemOnline.Models
+@{
+    ViewBag.Title = "Danh Sách Điểm Sinh Viên Bài Thi " + ViewBag.test_code + " (" + ViewBag.total + ")";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var List = Model as List<ScoreViewModel>;
+}
+
+<div class="title-content">
+    <span class="title">@ViewBag.Title</span>
+</div>
+<div class="content row col s12">
+    <table class="striped centered" id="list-score">
+            <thead>
+                <tr>
+                    <th>Tài Khoản</th>
+                    <th>Tên</th>
+                    <th>Điểm</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var student in List)
+                {
+                <tr>
+                    <td>@student.student.username</td>
+                    <td>@student.student.name</td>
+                    <td>@student.score.score_number</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+</div>
+<script>
+    $('#list-score').DataTable({
+        "language": {
+            "lengthMenu": "Hiển thị _MENU_",
+            "zeroRecords": "Không tìm thấy",
+            "info": "Hiển thị trang _PAGE_/_PAGES_",
+            "infoEmpty": "Không có dữ liệu",
+            "emptyTable": "Không có dữ liệu",
+            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+            "sSearch": "Tìm kiếm",
+            "paginate": {
+                "first": "Đầu",
+                "last": "Cuối",
+                "next": "Sau",
+                "previous": "Trước"
+            }
+        }
+    });
+    $('select').select();
+</script>

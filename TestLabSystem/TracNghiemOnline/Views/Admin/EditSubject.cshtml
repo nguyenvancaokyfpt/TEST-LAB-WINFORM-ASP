@@ -1,0 +1,39 @@
+﻿@using TracNghiemOnline.Models
+@{
+    var subject = Model as subject;
+    ViewBag.Title = "Sửa Môn " + subject.subject_name;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="title-content">
+    <a class="title" href="@Url.Action("SubjectManager")">Quay Lại</a>
+    <span class="title">@ViewBag.Title</span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content">
+    <div class="row">
+        <div id="add_normal" class="col s12">
+            @using (Html.BeginForm("EditSubject", "Admin", FormMethod.Post))
+            {
+                <input type="hidden" id="id_subject" name="id_subject" required value="@subject.id_subject" class="hidden">
+                <div class="input-field">
+                    <label for="name">Tên Môn</label>
+                    <input type="text" id="subject_name" name="subject_name" required value="@subject.subject_name">
+                </div>
+                <button type="submit" class="btn full-width" id="edit-subject" name="edit-subject">Sửa</button>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $('select').select();
+</script>
+
+

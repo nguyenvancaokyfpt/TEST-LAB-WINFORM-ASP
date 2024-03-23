@@ -1,0 +1,51 @@
+﻿@using TracNghiemOnline.Common
+@{
+    ViewBag.Title = "Lỗi truy cập";
+    ViewBag.copyright = "Copyright 2018 by Dzu";
+    ViewBag.name = "Hệ Thống Trắc Nghiệm Online";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        Lỗi
+    </title>
+    <link rel="stylesheet" href="~/Assets/res/css/normalize.css">
+    <link rel="stylesheet" href="~/Assets/css/style.min.css">
+    <link rel="stylesheet" href="~/Assets/css/font-awesome.css">
+    <link rel="stylesheet" href="~/Assets/css/materialize.min.css">
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Assets/js/materialize.min.js"></script>
+</head>
+
+<body class="body-login">
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper nav-fpt">
+                <a href="/" class="brand-logo cursor left"><i class="material-icons">home</i></a>
+            </div>
+        </nav>
+    </div>
+    <div class="title-content">
+        <a href="#" class="title" onclick="window.history.back()">Quay Lại</a>
+        <span class="title">@ViewBag.Title</span>
+    </div>
+    <div class="content row col s12 reset-margin">
+        <span class="failed">Lỗi: Bạn không có quyền truy cập trang này</span>
+    </div>
+    <div class="col l12 footer" id="footer">
+        <div class="row reset-margin">
+            <div class="col l6 s6">
+                <i id="website-copyright">@ViewBag.copyright</i>
+            </div>
+            <div class="col l6 s6 right-align">
+                <i id="website-title">@ViewBag.name</i>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

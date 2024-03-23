@@ -1,0 +1,76 @@
+﻿@using TracNghiemOnline.Models
+@{
+    var admin = Model as admin;
+    ViewBag.Title = "Sửa Tài Khoản Admin " + admin.name;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="title-content">
+    <a class="title" href="@Url.Action("AdminManager")">Quay Lại</a>
+    <span class="title">@ViewBag.Title</span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content">
+    <div class="row">
+        <div id="add_normal" class="col s12">
+            @using (Html.BeginForm("EditAdmin", "Admin", FormMethod.Post))
+            {
+                <input type="hidden" id="id_admin" name="id_admin" required value="@admin.id_admin" class="hidden">
+                <div class="col l6 s12">
+                    <div class="input-field">
+                        <label for="name">Tên</label>
+                        <input type="text" id="name" name="name" required value="@admin.name">
+                    </div>
+                    <div class="input-field">
+                        <label for="username">Tài khoản</label>
+                        <input type="text" name="username" id="username" required value="@admin.username">
+                    </div>
+                    <div class="input-field">
+                        <label for="password">Mật khẩu</label>
+                        <input type="password" data-minlength="6" name="password" id="password">
+                        <span class="helper">Để trống nếu không muốn đổi mật khẩu</span>
+                    </div>
+                </div>
+                <div class="col l6 s12">
+                    <div class="input-field">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required value="@admin.email">
+                    </div>
+                    <div class="input-field">
+                        <input type="date" name="birthday" id="birthday" required value="@admin.birthday.Date.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="input-field">
+                        <select name="gender" id="gender" required>
+                            @if (@admin.gender == "Nam")
+                            {
+                                <option value="Nam" selected>Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            }
+                            else
+                            {
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ" selected>Nữ</option>
+                            }
+                        </select>
+                        <label>Giới Tính</label>
+                    </div>
+                </div>
+                <div class="col l12">
+                    <button type="submit" class="btn full-width" id="edit-admin" name="edit-admin">Sửa</button>
+                </div>
+                }
+            </div>
+    </div>
+</div>
+<script>
+    $('select').select();
+</script>
+
+

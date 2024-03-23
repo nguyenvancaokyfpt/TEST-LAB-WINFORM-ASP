@@ -1,0 +1,194 @@
+﻿@using TracNghiemOnline.Models
+@{
+    ViewBag.Title = "Quản Lý Khóa/Lớp";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var List = Model as List<ClassViewModel>;
+    var ListGrades = ViewBag.ListGrades as List<grade>;
+    var ListSpecialities = ViewBag.ListSpecialities as List<speciality>;
+}
+
+<div class="title-content">
+    <span class="title">@ViewBag.Title</span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content row col s12">
+    @using (Html.BeginForm("DeleteClass", "Admin", FormMethod.Post))
+    {
+        <table class="striped centered" id="classes-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Lớp</th>
+                    <th>Khóa</th>
+                    <th>Ngành</th>
+                    <th>
+                        <p>
+                            <label>
+                                <input type="checkbox" id="checked-all" />
+                                <span></span>
+                            </label>
+                        </p>
+                    </th>
+                    <th>
+                        <i class="material-icons" id="icon-settings">settings</i>
+                        <input type="submit" class="material-icons hidden" value="delete_forever" style="background: none; border: none; cursor: pointer; color: red;" id="icon-delete-all" />
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in List)
+                {
+                    <tr>
+                        <td>@item.Class.id_class</td>
+                        <td>@item.Class.class_name</td>
+                        <td>@item.grade.grade_name</td>
+                        <td>@item.speciality.speciality_name</td>
+                        <td>
+                            <p>
+                                <label>
+                                    <input type="checkbox" class="checkbox" name="checkbox" value="@item.Class.id_class" onchange="check_box()" />
+                                    <span></span>
+                                </label>
+                            </p>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("EditClass/" + item.Class.id_class)"><i class="material-icons">edit</i></a>
+                            <a class="modal-trigger" href="#delete-@item.Class.id_class"><i class="material-icons">delete</i></a>
+                        </td>
+                    </tr>
+                    <!-- Modal Structure -->
+                    <div id="delete-@item.Class.id_class" class="modal">
+                        <div class="modal-content">
+                            <h4>Xác Nhận</h4>
+                            <p>Bạn có xóa lớp @item.Class.class_name</p>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                            <a href="@Url.Action("DeleteClass/" + item.Class.id_class)" class="modal-close waves-effect waves-green btn-flat">Có</a>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<div class="content">
+    <div class="row" style="padding-top: 10px">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab col s6"><a href="#add_normal" class="active" style="color: #f27024; font-weight: bold;">Thêm Khóa/Lớp</a></li>
+                <li class="tab col s6"><a href="#_add_via_file" style="color: #f27024; font-weight: bold;">Thêm Bằng File</a></li>
+            </ul>
+        </div>
+        <div id="add_normal" class="col s12">
+            @using (Html.BeginForm("AddClass", "Admin", FormMethod.Post))
+            {
+                <div class="col l6 s12">
+                    <div class="input-field">
+                        <label for="email">Tên Lớp <span class="failed">(*)</span></label>
+                        <input type="text" id="class_name" name="class_name" required>
+                    </div>
+                    <div class="input-field">
+                        <select name="id_grade" id="id_grade" required>
+                            @foreach (var item in ListGrades)
+                            {
+                                <option value="@item.id_grade">@item.grade_name</option>
+                            }
+                        </select>
+                        <label>Khóa</label>
+                    </div>
+                    <div class="input-field">
+                        <select name="id_speciality" id="id_speciality" required>
+                            @foreach (var item in ListSpecialities)
+                            {
+                                <option value="@item.id_speciality">@item.speciality_name</option>
+                            }
+                        </select>
+                        <label>Ngành</label>
+                    </div>
+                    <div class="col s12">
+                        <button type="submit" class="btn full-width" id="add-class" name="add-class">Thêm</button>
+                    </div>
+                </div>
+            }
+            @using (Html.BeginForm("AddGrade", "Admin", FormMethod.Post))
+            {
+                <div class="col l6 s12">
+                    <div class="input-field">
+                        <label for="name">Tên Khóa <span class="failed">(*)</span></label>
+                        <input type="text" id="grade_name" name="grade_name" required>
+                    </div>
+                    <div class="col s12">
+                        <button type="submit" class="btn full-width" id="add-grade" name="add-grade">Thêm</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div id="_add_via_file" class="col s12">
+            <span class="title">Chức Năng Đang Xây Dựng!</span>
+        </div>
+    </div>
+</div>
+<script>
+    $('.tabs').tabs();
+    $('.modal').modal();
+    $('#classes-table').DataTable({
+        "language": {
+            "lengthMenu": "Hiển thị _MENU_",
+            "zeroRecords": "Không tìm thấy",
+            "info": "Hiển thị trang _PAGE_/_PAGES_",
+            "infoEmpty": "Không có dữ liệu",
+            "emptyTable": "Không có dữ liệu",
+            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+            "sSearch": "Tìm kiếm",
+            "paginate": {
+                "first": "Đầu",
+                "last": "Cuối",
+                "next": "Sau",
+                "previous": "Trước"
+            }
+        },
+        "aoColumnDefs": [
+            { "bSortable": false, "aTargets": [4 , 5] }
+        ]
+    });
+    $('select').select();
+    $('#checked-all').on('change', function () {
+        if (this.checked) {
+            $('.checkbox').each(function () {
+                this.checked = true;
+            });
+            $('#icon-settings').addClass('hidden');
+            $('#icon-delete-all').removeClass('hidden');
+        } else {
+            $('.checkbox').each(function () {
+                this.checked = false;
+            });
+            $('#icon-settings').removeClass('hidden');
+            $('#icon-delete-all').addClass('hidden');
+        }
+    });
+    function check_box() {
+        $('#icon-delete-all').removeClass('hidden');
+        if ($('.checkbox:checked').length == $('.checkbox').length) {
+            $('#checked-all').prop('checked', true);
+        } else {
+            $('#checked-all').prop('checked', false);
+        }
+        if ($('.checkbox:checked').length == 0) {
+            $('#icon-delete-all').addClass('hidden');
+            $('#icon-settings').removeClass('hidden');
+        } else {
+            $('#icon-settings').addClass('hidden');
+            $('#icon-delete-all').removeClass('hidden');
+        }
+    }
+</script>

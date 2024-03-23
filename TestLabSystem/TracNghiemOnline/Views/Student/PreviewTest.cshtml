@@ -1,0 +1,156 @@
+﻿@using TracNghiemOnline.Models;
+
+@{
+    var list = Model as List<StudentQuestViewModel>;
+    ViewBag.Title = "Chi Tiết Bài Thi " + list.First().test.test_code;
+    var score = ViewBag.score as score;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="title-content">
+    <span class="title">@ViewBag.Title</span>
+</div>
+<div class="content row col s12 reset-margin" style="padding:0;">
+    <span class="title">Số câu trả lời đúng: <b>@score.detail</b></span><br />
+    <span class="title">Điểm: <b style="color:red; font-size:20px;">@score.score_number</b></span>
+    <hr />
+    @{
+        int x = 1;
+        foreach (var item in list)
+        {
+            <div id="quest-@x" class="item-quest">
+                <div class="quest-title">Câu @x :</div>
+                <div class="quest-content">
+                    <span>@item.question.content</span>
+                    @if (!item.question.img_content.Equals("noimage.png"))
+                    {
+                        <small class="title">(Câu hỏi có nội dung ảnh)</small>
+                        <img src="~/Assets/img_questions/@item.question.img_content" style="max-width:700px" />
+                    }
+                </div>
+                <div class="quest-answer">
+                    <p>
+                        <label>
+                            @if (item.student_test.student_answer != null && item.student_test.student_answer.Trim().Equals(item.student_test.answer_a.Trim()) && item.student_test.student_answer.Trim().Equals(item.question.correct_answer.Trim()))
+                            {
+                                <input name="@item.question.id_question" type="radio" checked disabled />
+                                <span style="color:green">@item.student_test.answer_a</span>
+                            }
+                            else
+                            {
+                                if (item.student_test.student_answer != null && item.student_test.student_answer.Trim().Equals(item.student_test.answer_a.Trim()) && !item.student_test.student_answer.Trim().Equals(item.question.correct_answer.Trim()))
+                                {
+                                    <input name="@item.question.id_question" type="radio" checked disabled />
+                                    <span style="color:red">@item.student_test.answer_a</span>
+                                }
+                                else
+                                {
+                                    if (item.student_test.answer_a.Trim().Equals(item.question.correct_answer.Trim()))
+                                    {
+                                        <input name="@item.question.id_question" type="radio" checked disabled />
+                                        <span style="color:green">@item.student_test.answer_a</span>
+                                    }
+                                    else
+                                    {
+                                        <input name="@item.question.id_question" type="radio" disabled />
+                                        <span>@item.student_test.answer_a</span>
+                                    }
+                                }
+                            }
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            @if (item.student_test.student_answer != null && item.student_test.student_answer.Trim().Equals(item.student_test.answer_b.Trim()) && item.student_test.student_answer.Trim().Equals(item.question.correct_answer.Trim()))
+                            {
+                                <input name="@item.question.id_question" type="radio" checked disabled />
+                                <span style="color:green">@item.student_test.answer_b</span>
+                            }
+                            else
+                            {
+                                if (item.student_test.student_answer != null && item.student_test.student_answer.Trim().Equals(item.student_test.answer_b.Trim()) && !item.student_test.student_answer.Trim().Equals(item.question.correct_answer.Trim()))
+                                {
+                                    <input name="@item.question.id_question" type="radio" checked disabled />
+                                    <span style="color:red">@item.student_test.answer_b</span>
+                                }
+                                else
+                                {
+                                    if (item.student_test.answer_b.Trim().Equals(item.question.correct_answer.Trim()))
+                                    {
+                                        <input name="@item.question.id_question" type="radio" checked disabled />
+                                        <span style="color:green">@item.student_test.answer_b</span>
+                                    }
+                                    else
+                                    {
+                                        <input name="@item.question.id_question" type="radio" disabled />
+                                        <span>@item.student_test.answer_b</span>
+                                    }
+                                }
+                            }
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            @if (item.student_test.student_answer != null && item.student_test.student_answer.Trim().Equals(item.student_test.answer_c.Trim()) && item.student_test.student_answer.Trim().Equals(item.question.correct_answer.Trim()))
+                            {
+                                <input name="@item.question.id_question" type="radio" checked disabled />
+                                <span style="color:green">@item.student_test.answer_c</span>
+                            }
+                            else
+                            {
+                                if (item.student_test.student_answer != null && item.student_test.student_answer.Trim().Equals(item.student_test.answer_c.Trim()) && !item.student_test.student_answer.Trim().Equals(item.question.correct_answer.Trim()))
+                                {
+                                    <input name="@item.question.id_question" type="radio" checked disabled />
+                                    <span style="color:red">@item.student_test.answer_c</span>
+                                }
+                                else
+                                {
+                                    if (item.student_test.answer_c.Trim().Equals(item.question.correct_answer.Trim()))
+                                    {
+                                        <input name="@item.question.id_question" type="radio" checked disabled />
+                                        <span style="color:green">@item.student_test.answer_c</span>
+                                    }
+                                    else
+                                    {
+                                        <input name="@item.question.id_question" type="radio" disabled />
+                                        <span>@item.student_test.answer_c</span>
+                                    }
+                                }
+                            }
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            @if (item.student_test.student_answer != null && item.student_test.student_answer.Trim().Equals(item.student_test.answer_d.Trim()) && item.student_test.student_answer.Trim().Equals(item.question.correct_answer.Trim()))
+                            {
+                                <input name="@item.question.id_question" type="radio" checked disabled />
+                                <span style="color:green">@item.student_test.answer_d</span>
+                            }
+                            else
+                            {
+                                if (item.student_test.student_answer != null && item.student_test.student_answer.Trim().Equals(item.student_test.answer_d.Trim()) && !item.student_test.student_answer.Trim().Equals(item.question.correct_answer.Trim()))
+                                {
+                                    <input name="@item.question.id_question" type="radio" checked disabled />
+                                    <span style="color:red">@item.student_test.answer_d</span>
+                                }
+                                else
+                                {
+                                    if (item.student_test.answer_d.Trim().Equals(item.question.correct_answer.Trim()))
+                                    {
+                                        <input name="@item.question.id_question" type="radio" checked disabled />
+                                        <span style="color:green">@item.student_test.answer_d</span>
+                                    }
+                                    else
+                                    {
+                                        <input name="@item.question.id_question" type="radio" disabled />
+                                        <span>@item.student_test.answer_d</span>
+                                    }
+                                }
+                            }
+                        </label>
+                    </p>
+                </div>
+            </div>
+            x = x + 1;
+        }
+    }
+</div>

@@ -1,0 +1,51 @@
+﻿@using TracNghiemOnline.Models
+@{
+    var t = Model as test;
+    ViewBag.Title = "Sửa Đề Thi " + t.test_code;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="title-content">
+    <a class="title" href="@Url.Action("TestManager")">Quay Lại</a>
+    <span class="title">@ViewBag.Title</span>
+    @if (TempData["status_id"] != null && (bool)TempData["status_id"])
+    {
+        <span class="timer success">@TempData["status"]</span>
+    }
+    else
+    {
+        <span class="timer failed">@TempData["status"]</span>
+    }
+</div>
+<div class="content">
+    <div class="row">
+        <div id="add_normal" class="col s12">
+            @using (Html.BeginForm("EditTest", "Admin", FormMethod.Post))
+            {
+                <input type="hidden" id="test_code" name="test_code" required value="@t.test_code" class="hidden">
+                <div class="input-field">
+                    <label for="email">Tên <span class="failed">(*)</span></label>
+                    <input type="text" id="test_name" name="test_name" required value="@t.test_name">
+                </div>
+                <div class="input-field">
+                    <label for="email">Mật khẩu (để trống nếu không đổi)</label>
+                    <input type="password" id="password" name="password">
+                </div>
+                <div class="input-field">
+                    <label for="email">Thời gian làm bài (phút) <span class="failed">(*)</span></label>
+                    <input type="number" id="time_to_do" name="time_to_do" required value="@t.time_to_do">
+                </div>
+                <div class="input-field">
+                    <textarea name="note" class="materialize-textarea">@t.note</textarea>
+                    <label for="content">Ghi chú</label>
+                </div>
+                <button type="submit" class="btn full-width" id="add-question" name="add-question">Sửa</button>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $('select').select();
+</script>
+
+
