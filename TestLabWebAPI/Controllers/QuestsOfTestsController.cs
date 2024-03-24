@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,10 +16,12 @@ namespace TestLabWebAPI.Controllers
     public class QuestsOfTestsController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public QuestsOfTestsController(TracNghiemOnlineContext context)
+        public QuestsOfTestsController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/QuestsOfTests
@@ -41,15 +45,33 @@ namespace TestLabWebAPI.Controllers
             return questsOfTest;
         }
 
+        // GET: api/QuestsOfTests/GetQuestsByTestCode/5
+        [HttpGet("GetQuestsByTestCode/{code}")]
+        public async Task<ActionResult<IEnumerable<QuestsOfTest>>> GetQuestsByTestId(int code)
+        {
+            var questsOfTest = await _context.QuestsOfTests.Where(q => q.TestCode == code).ToListAsync();
+
+            if (questsOfTest == null)
+            {
+                return NotFound();
+            }
+
+            return questsOfTest;
+        }
+
         // PUT: api/QuestsOfTests/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutQuestsOfTest(int id, QuestsOfTest questsOfTest)
+        public async Task<IActionResult> PutQuestsOfTest(int id, QuestsOfTestDTO questsOfTestDTO)
         {
+            var questsOfTest = _context.QuestsOfTests.Find(id);
+
             if (id != questsOfTest.Id)
             {
                 return BadRequest();
             }
+
+            questsOfTest = _mapper.Map(questsOfTestDTO, questsOfTest);
 
             _context.Entry(questsOfTest).State = EntityState.Modified;
 
@@ -75,8 +97,9 @@ namespace TestLabWebAPI.Controllers
         // POST: api/QuestsOfTests
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<QuestsOfTest>> PostQuestsOfTest(QuestsOfTest questsOfTest)
+        public async Task<ActionResult<QuestsOfTest>> PostQuestsOfTest(QuestsOfTestDTO questsOfTestDTO)
         {
+            var questsOfTest = _mapper.Map<QuestsOfTest>(questsOfTestDTO);
             _context.QuestsOfTests.Add(questsOfTest);
             await _context.SaveChangesAsync();
 

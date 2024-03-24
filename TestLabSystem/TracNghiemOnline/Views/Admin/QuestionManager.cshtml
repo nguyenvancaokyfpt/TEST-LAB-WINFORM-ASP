@@ -18,6 +18,20 @@
     }
 </div>
 <div class="content row col s12">
+    @foreach (var item in List)
+    {
+        <!-- Modal Structure -->
+        <div id="delete-@item.question.id_question" class="modal">
+            <div class="modal-content">
+                <h4>Xác Nhận</h4>
+                <p>Bạn có xóa câu hỏi @item.question.content</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                <a href="@Url.Action("DeleteQuestion/" + item.question.id_question)" class="modal-close waves-effect waves-green btn-flat">Có</a>
+            </div>
+        </div>
+    }
     @using (Html.BeginForm("DeleteQuestion", "Admin", FormMethod.Post))
     {
         <table class="striped centered" id="questions-table">
@@ -45,74 +59,7 @@
                 </tr>
             </thead>
 
-            <tbody>
-                @foreach (var item in List)
-                {
-                <tr>
-                    <td>@item.question.id_question</td>
-                    <td>
-                        @item.question.content
-                        @if (!item.question.img_content.Equals("noimage.png"))
-                        {
-                            <br /><img src="../Assets/img_questions/@item.question.img_content" style="max-width: 600px; max-height: 600px" />
-                        }
-                    </td>
-                    <td>
-                        @item.question.answer_a
-                        @if (item.question.correct_answer.Equals(item.question.answer_a))
-                        {
-                            <br /><span class="failed">(Đáp Án Đúng)</span>
-                        }
-                    </td>
-                    <td>
-                        @item.question.answer_b
-                        @if (item.question.correct_answer.Equals(item.question.answer_b))
-                        {
-                            <br /><span class="failed">(Đáp Án Đúng)</span>
-                        }
-                    </td>
-                    <td>
-                        @item.question.answer_c
-
-                        @if (item.question.correct_answer.Equals(item.question.answer_c))
-                        {
-                            <br /><span class="failed">(Đáp Án Đúng)</span>
-                        }
-                    </td>
-                    <td>
-                        @item.question.answer_d
-                        @if (item.question.correct_answer.Equals(item.question.answer_d))
-                        {
-                            <br /><span class="failed">(Đáp Án Đúng)</span>
-                        }
-                    </td>
-                    <td>Chương @item.question.unit <br />
-                        Môn @item.subject.subject_name</td>
-                    <td>
-                        <p>
-                            <label>
-                                <input type="checkbox" class="checkbox" name="checkbox" value="@item.question.id_question" onchange="check_box()" />
-                                <span></span>
-                            </label>
-                        </p>
-                    </td>
-                    <td>
-                        <a href="@Url.Action("EditQuestion/" + item.question.id_question)"><i class="material-icons">edit</i></a>
-                        <a class="modal-trigger" href="#delete-@item.question.id_question"><i class="material-icons">delete</i></a>
-                    </td>
-                </tr>
-                    <!-- Modal Structure -->
-                    <div id="delete-@item.question.id_question" class="modal">
-                        <div class="modal-content">
-                            <h4>Xác Nhận</h4>
-                            <p>Bạn có xóa câu hỏi @item.question.content</p>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
-                            <a href="@Url.Action("DeleteQuestion/" + item.question.id_question)" class="modal-close waves-effect waves-green btn-flat">Có</a>
-                        </div>
-                    </div>
-                }
+            <tbody id="questions-table-data">
             </tbody>
         </table>
     }
@@ -187,26 +134,84 @@
         </div>
     </div>
 </div>
+
+<script>
+    function get_list_question() {
+        var url = "http://localhost:5023/api/Questions";
+        var success = function (result) {
+            show_list_question(result);
+        };
+        $.get(url, success);
+    }
+    function show_list_question(data) {
+        var list = $('#questions-table-data');
+        list.empty();
+        for (var i = 0; i < data.length; i++) {
+            var question = data[i];
+            var tr = $('<tr></tr>');
+            tr.append('<td>' + question.idQuestion + '</td>');
+            tr.append('<td>' + question.content + '</td>');
+            var td = $('<td></td>');
+            td.append(question.answerA);
+            if (question.correctAnswer == question.answerA || question.correctAnswer == "A") {
+                td.append('<br>');
+                td.append('<span class="failed">(Đáp Án Đúng)</span>');
+            }
+            tr.append(td);
+            var td = $('<td></td>');
+            td.append(question.answerB);
+            if (question.correctAnswer == question.answerB || question.correctAnswer == "B") {
+                td.append('<br>');
+                td.append('<span class="failed">(Đáp Án Đúng)</span>');
+            }
+            tr.append(td);
+            var td = $('<td></td>');
+            td.append(question.answerC);
+            if (question.correctAnswer == question.answerC || question.correctAnswer == "C") {
+                td.append('<br>');
+                td.append('<span class="failed">(Đáp Án Đúng)</span>');
+            }
+            tr.append(td);
+            var td = $('<td></td>');
+            td.append(question.answerD);
+            if (question.correctAnswer == question.answerD || question.correctAnswer == "D") {
+                td.append('<br>');
+                td.append('<span class="failed">(Đáp Án Đúng)</span>');
+            }
+            tr.append(td);
+            tr.append('<td>Chương ' + question.unit + ' | Môn ' + question.subjectName + '</td>');
+
+            tr.append('<td><p><label><input type="checkbox" class="checkbox" name="checkbox" value="' + question.idQuestion + '" onchange="check_box()"><span></span></label></p></td>');
+            tr.append('<td> <a href="EditQuestion/' + question.idQuestion + '"><i class="material-icons">edit</i></a> <a class="modal-trigger" href="#delete-' + question.idQuestion + '"><i class="material-icons">delete</i></a></td>');
+            list.append(tr);
+        }
+        $('#questions-table').DataTable({
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_",
+                "zeroRecords": "Không tìm thấy",
+                "info": "Hiển thị trang _PAGE_/_PAGES_",
+                "infoEmpty": "Không có dữ liệu",
+                "emptyTable": "Không có dữ liệu",
+                "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+                "sSearch": "Tìm kiếm",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Sau",
+                    "previous": "Trước"
+                }
+            }
+        });
+    }
+    $(function () {
+        get_list_question();
+    });
+</script>
+
 <script>
     $('.tabs').tabs();
     $('.modal').modal();
-    $('#questions-table').DataTable({
-        "language": {
-            "lengthMenu": "Hiển thị _MENU_",
-            "zeroRecords": "Không tìm thấy",
-            "info": "Hiển thị trang _PAGE_/_PAGES_",
-            "infoEmpty": "Không có dữ liệu",
-            "emptyTable": "Không có dữ liệu",
-            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
-            "sSearch": "Tìm kiếm",
-            "paginate": {
-                "first": "Đầu",
-                "last": "Cuối",
-                "next": "Sau",
-                "previous": "Trước"
-            }
-        }
-    });
+
     $('select').select();
     $('#checked-all').on('change', function () {
         if (this.checked) {

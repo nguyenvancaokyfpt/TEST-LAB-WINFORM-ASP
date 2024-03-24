@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,17 +16,22 @@ namespace TestLabWebAPI.Controllers
     public class ClassesController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public ClassesController(TracNghiemOnlineContext context)
+        public ClassesController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Classes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Class>>> GetClasses()
         {
-            return await _context.Classes.ToListAsync();
+            return await _context.Classes.
+                Include(c => c.IdSpecialityNavigation).
+                Include(c => c.IdGradeNavigation).
+                ToListAsync();
         }
 
         // GET: api/Classes/5
@@ -44,12 +51,16 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/Classes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClass(int id, Class @class)
+        public async Task<IActionResult> PutClass(int id, ClassDTO classDTO)
         {
+            var @class = _context.Classes.Find(id);
+
             if (id != @class.IdClass)
             {
                 return BadRequest();
             }
+
+            @class = _mapper.Map(classDTO, @class);
 
             _context.Entry(@class).State = EntityState.Modified;
 
@@ -75,8 +86,9 @@ namespace TestLabWebAPI.Controllers
         // POST: api/Classes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Class>> PostClass(Class @class)
+        public async Task<ActionResult<Class>> PostClass(ClassDTO classDTO)
         {
+            var @class = _mapper.Map<Class>(classDTO);
             _context.Classes.Add(@class);
             await _context.SaveChangesAsync();
 

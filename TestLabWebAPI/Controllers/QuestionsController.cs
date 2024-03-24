@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
+using TestLabWebAPI.Responses;
 
 namespace TestLabWebAPI.Controllers
 {
@@ -14,18 +17,45 @@ namespace TestLabWebAPI.Controllers
     public class QuestionsController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public QuestionsController(TracNghiemOnlineContext context)
+        public QuestionsController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Questions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Question>>> GetQuestions()
+        public async Task<ActionResult<IEnumerable<QuestionRes>>> GetQuestions()
         {
-            return await _context.Questions.ToListAsync();
+            var questions = await _context.Questions
+                .ToListAsync();
+            var subjects = await _context.Subjects
+                .ToListAsync();
+
+            List<QuestionRes> res = new List<QuestionRes>();
+            foreach (var question in questions)
+            {
+                var subject = subjects.Find(s => s.IdSubject == question.IdSubject);
+                res.Add(new QuestionRes
+                {
+                    IdQuestion = question.IdQuestion,
+                    Content = question.Content,
+                    Unit = question.Unit,
+                    ImgContent = question.ImgContent,
+                    AnswerA = question.AnswerA,
+                    AnswerB = question.AnswerB,
+                    AnswerC = question.AnswerC,
+                    AnswerD = question.AnswerD,
+                    CorrectAnswer = question.CorrectAnswer,
+                    SubjectName = subject.SubjectName
+                });
+            }
+
+            return res;
         }
+
 
         // GET: api/Questions/5
         [HttpGet("{id}")]
@@ -44,11 +74,41 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/Questions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutQuestion(int id, Question question)
+        public async Task<IActionResult> PutQuestion(int id, QuestionDTO questionDTO)
         {
+            var question = _context.Questions.Find(id);
+
             if (id != question.IdQuestion)
             {
                 return BadRequest();
+            }
+
+            var oldImage = question.ImgContent;
+            question = _mapper.Map(questionDTO, question);
+
+            // if image64 is not null, update image and save to disk then delete the old image
+            if (questionDTO.ImgBase64 != null)
+            {
+                byte[] image = Convert.FromBase64String(questionDTO.ImgBase64);
+                // Save image to disk
+                string imgName = Guid.NewGuid().ToString() + ".png";
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", imgName);
+                // check if directory exists
+                if (!Directory.Exists(Path.GetDirectoryName(path)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(path));
+                }
+                System.IO.File.WriteAllBytes(path, image);
+                question.ImgContent = imgName;
+                // delete old image
+                if (oldImage != null)
+                {
+                    string oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", oldImage);
+                    if (System.IO.File.Exists(oldPath))
+                    {
+                        System.IO.File.Delete(oldPath);
+                    }
+                }
             }
 
             _context.Entry(question).State = EntityState.Modified;
@@ -75,8 +135,25 @@ namespace TestLabWebAPI.Controllers
         // POST: api/Questions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Question>> PostQuestion(Question question)
+        public async Task<ActionResult<Question>> PostQuestion(QuestionDTO questionDTO)
         {
+            var question = _mapper.Map<Question>(questionDTO);
+
+            if (questionDTO.ImgBase64 != null)
+            {
+                byte[] image = Convert.FromBase64String(questionDTO.ImgBase64);
+                // Save image to disk
+                string imgName = Guid.NewGuid().ToString() + ".png";
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", imgName);
+                // check if directory exists
+                if (!Directory.Exists(Path.GetDirectoryName(path)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(path));
+                }
+                System.IO.File.WriteAllBytes(path, image);
+                question.ImgContent = imgName;
+            }
+
             _context.Questions.Add(question);
             await _context.SaveChangesAsync();
 

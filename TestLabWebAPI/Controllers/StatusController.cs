@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,10 +16,12 @@ namespace TestLabWebAPI.Controllers
     public class StatusController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public StatusController(TracNghiemOnlineContext context)
+        public StatusController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Status
@@ -44,13 +48,10 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/Status/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStatus(int id, Status status)
+        public async Task<IActionResult> PutStatus(int id, StatusDTO statusDTO)
         {
-            if (id != status.IdStatus)
-            {
-                return BadRequest();
-            }
-
+            Status status = _mapper.Map<Status>(statusDTO);
+            status.IdStatus = id;
             _context.Entry(status).State = EntityState.Modified;
 
             try
@@ -75,8 +76,9 @@ namespace TestLabWebAPI.Controllers
         // POST: api/Status
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Status>> PostStatus(Status status)
+        public async Task<ActionResult<Status>> PostStatus(StatusDTO statusDTO)
         {
+            Status status = _mapper.Map<Status>(statusDTO);
             _context.Statuses.Add(status);
             await _context.SaveChangesAsync();
 

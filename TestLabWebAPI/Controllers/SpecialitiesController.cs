@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,10 +16,12 @@ namespace TestLabWebAPI.Controllers
     public class SpecialitiesController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public SpecialitiesController(TracNghiemOnlineContext context)
+        public SpecialitiesController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Specialities
@@ -44,13 +48,10 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/Specialities/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSpeciality(int id, Speciality speciality)
+        public async Task<IActionResult> PutSpeciality(int id, SpecialityDTO specialityDTO)
         {
-            if (id != speciality.IdSpeciality)
-            {
-                return BadRequest();
-            }
-
+            Speciality speciality = _mapper.Map<Speciality>(specialityDTO);
+            speciality.IdSpeciality = id;
             _context.Entry(speciality).State = EntityState.Modified;
 
             try
@@ -75,8 +76,9 @@ namespace TestLabWebAPI.Controllers
         // POST: api/Specialities
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Speciality>> PostSpeciality(Speciality speciality)
+        public async Task<ActionResult<Speciality>> PostSpeciality(SpecialityDTO specialityDTO)
         {
+            Speciality speciality = _mapper.Map<Speciality>(specialityDTO);
             _context.Specialities.Add(speciality);
             await _context.SaveChangesAsync();
 

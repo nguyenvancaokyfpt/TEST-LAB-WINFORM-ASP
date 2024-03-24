@@ -5,8 +5,6 @@ namespace TestLabWebAPI.DTOs;
 
 public partial class StudentTestDetailDTO
 {
-    public int Id { get; set; }
-
     public int IdStudent { get; set; }
 
     public int TestCode { get; set; }

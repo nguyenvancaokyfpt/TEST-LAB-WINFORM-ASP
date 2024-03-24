@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TestLabWebAPI.DTOs;
+namespace TestLabWebAPI.Responses;
 
-public partial class QuestionDTO
+public partial class QuestionRes
 {
-    public int IdSubject { get; set; }
+    public int IdQuestion { get; set; }
 
     public int Unit { get; set; }
 
@@ -24,6 +24,8 @@ public partial class QuestionDTO
     public string AnswerD { get; set; } = null!;
 
     public string CorrectAnswer { get; set; } = null!;
+
+    public string SubjectName { get; set; } = null!;
 
     public DateTime? Timestamps { get; set; }
 }

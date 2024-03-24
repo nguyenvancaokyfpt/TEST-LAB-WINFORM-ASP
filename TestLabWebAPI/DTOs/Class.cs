@@ -5,8 +5,6 @@ namespace TestLabWebAPI.DTOs;
 
 public partial class ClassDTO
 {
-    public int IdClass { get; set; }
-
     public string ClassName { get; set; } = null!;
 
     public int IdGrade { get; set; }

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,17 +16,26 @@ namespace TestLabWebAPI.Controllers
     public class TeachersController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public TeachersController(TracNghiemOnlineContext context)
+        public TeachersController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Teachers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Teacher>>> GetTeachers()
         {
-            return await _context.Teachers.ToListAsync();
+            var teachers = await _context.Teachers
+                .Include(t => t.IdSpecialityNavigation)
+                .ToListAsync();
+            foreach (var teacher in teachers)
+            {
+                teacher.Password = null;
+            }
+            return teachers;
         }
 
         // GET: api/Teachers/5
@@ -37,6 +48,7 @@ namespace TestLabWebAPI.Controllers
             {
                 return NotFound();
             }
+            teacher.Password = null;
 
             return teacher;
         }
@@ -44,12 +56,16 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/Teachers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTeacher(int id, Teacher teacher)
+        public async Task<IActionResult> PutTeacher(int id, TeacherDTO teacherDTO)
         {
+            var teacher = _context.Teachers.Find(id);
+
             if (id != teacher.IdTeacher)
             {
                 return BadRequest();
             }
+
+            teacher = _mapper.Map(teacherDTO, teacher);
 
             _context.Entry(teacher).State = EntityState.Modified;
 
@@ -75,8 +91,11 @@ namespace TestLabWebAPI.Controllers
         // POST: api/Teachers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Teacher>> PostTeacher(Teacher teacher)
+        public async Task<ActionResult<Teacher>> PostTeacher(TeacherDTO teacherDTO)
         {
+            teacherDTO.Password = Encryptor.MD5Hash(teacherDTO.Password);
+
+            var teacher = _mapper.Map<Teacher>(teacherDTO);
             _context.Teachers.Add(teacher);
             await _context.SaveChangesAsync();
 

@@ -74,8 +74,11 @@ namespace TracNghiemOnline.Controllers
             int count_correct = 0;
             foreach (var item in list)
             {
-                if (item.student_test.student_answer != null && item.student_test.student_answer.Trim().Equals(item.question.correct_answer.Trim()))
+                if (item.student_test.student_answer != null 
+                    && item.student_test.student_answer.Trim().Equals(item.question.correct_answer.Trim()))
                     count_correct++;
+
+
             }
             double score = coefficient * count_correct;
             string detail = count_correct + "/" + total_quest;

@@ -19,6 +19,20 @@
     }
 </div>
 <div class="content row col s12">
+    @foreach (var item in List)
+    {
+        <!-- Modal Structure -->
+        <div id="delete-@item.Class.id_class" class="modal">
+            <div class="modal-content">
+                <h4>Xác Nhận</h4>
+                <p>Bạn có xóa lớp @item.Class.class_name</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                <a href="@Url.Action("DeleteClass/" + item.Class.id_class)" class="modal-close waves-effect waves-green btn-flat">Có</a>
+            </div>
+        </div>
+    }
     @using (Html.BeginForm("DeleteClass", "Admin", FormMethod.Post))
     {
         <table class="striped centered" id="classes-table">
@@ -43,39 +57,7 @@
                 </tr>
             </thead>
 
-            <tbody>
-                @foreach (var item in List)
-                {
-                    <tr>
-                        <td>@item.Class.id_class</td>
-                        <td>@item.Class.class_name</td>
-                        <td>@item.grade.grade_name</td>
-                        <td>@item.speciality.speciality_name</td>
-                        <td>
-                            <p>
-                                <label>
-                                    <input type="checkbox" class="checkbox" name="checkbox" value="@item.Class.id_class" onchange="check_box()" />
-                                    <span></span>
-                                </label>
-                            </p>
-                        </td>
-                        <td>
-                            <a href="@Url.Action("EditClass/" + item.Class.id_class)"><i class="material-icons">edit</i></a>
-                            <a class="modal-trigger" href="#delete-@item.Class.id_class"><i class="material-icons">delete</i></a>
-                        </td>
-                    </tr>
-                    <!-- Modal Structure -->
-                    <div id="delete-@item.Class.id_class" class="modal">
-                        <div class="modal-content">
-                            <h4>Xác Nhận</h4>
-                            <p>Bạn có xóa lớp @item.Class.class_name</p>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
-                            <a href="@Url.Action("DeleteClass/" + item.Class.id_class)" class="modal-close waves-effect waves-green btn-flat">Có</a>
-                        </div>
-                    </div>
-                }
+            <tbody id="classes-table-data">
             </tbody>
         </table>
     }
@@ -137,29 +119,60 @@
         </div>
     </div>
 </div>
+
+<script>
+    function get_list_classes() {
+        var url = "http://localhost:5023/api/Classes";
+        var success = function (result) {
+            show_list_classes(result);
+        };
+        $.get(url, success);
+    }
+
+    function show_list_classes(data) {
+        var list = $('#classes-table-data');
+        list.empty();
+        for (var i = 0; i < data.length; i++) {
+            var classes = data[i];
+            var tr = $('<tr></tr>');
+            tr.append('<td>' + classes.idClass + '</td>');
+            tr.append('<td>' + classes.className + '</td>');
+            tr.append('<td>' + classes.idGradeNavigation.gradeName + '</td>');
+            tr.append('<td>' + classes.idSpecialityNavigation.specialityName + '</td>');
+            tr.append('<td><p><label><input type="checkbox" class="checkbox" name="checkbox" value="' + classes.idClass + '" onchange="check_box()"><span></span></label></p></td>');
+            tr.append('<td> <a href="EditClass/' + classes.idClass + '"><i class="material-icons">edit</i></a> <a class="modal-trigger" href="#delete-' + classes.idClass + '"><i class="material-icons">delete</i></a></td>');
+            list.append(tr);
+        }
+        $('#classes-table').DataTable({
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_",
+                "zeroRecords": "Không tìm thấy",
+                "info": "Hiển thị trang _PAGE_/_PAGES_",
+                "infoEmpty": "Không có dữ liệu",
+                "emptyTable": "Không có dữ liệu",
+                "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+                "sSearch": "Tìm kiếm",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Sau",
+                    "previous": "Trước"
+                }
+            },
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [4, 5] }
+            ]
+        });
+    }
+    $(function () {
+        get_list_classes();
+    });
+</script>
+
 <script>
     $('.tabs').tabs();
     $('.modal').modal();
-    $('#classes-table').DataTable({
-        "language": {
-            "lengthMenu": "Hiển thị _MENU_",
-            "zeroRecords": "Không tìm thấy",
-            "info": "Hiển thị trang _PAGE_/_PAGES_",
-            "infoEmpty": "Không có dữ liệu",
-            "emptyTable": "Không có dữ liệu",
-            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
-            "sSearch": "Tìm kiếm",
-            "paginate": {
-                "first": "Đầu",
-                "last": "Cuối",
-                "next": "Sau",
-                "previous": "Trước"
-            }
-        },
-        "aoColumnDefs": [
-            { "bSortable": false, "aTargets": [4 , 5] }
-        ]
-    });
+
     $('select').select();
     $('#checked-all').on('change', function () {
         if (this.checked) {

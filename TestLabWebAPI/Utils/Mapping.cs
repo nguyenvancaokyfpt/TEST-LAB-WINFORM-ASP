@@ -16,8 +16,12 @@ namespace TestLabWebAPI
         }
 
         public Mapping() {
-        
-            CreateMap<Admin, AdminDTO>().ReverseMap();
+
+            CreateMap<Admin, AdminDTO>()
+                .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthday.ToString()));
+            CreateMap<AdminDTO, Admin>()
+                .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => ParseDate(src.Birthday)));
+
             CreateMap<Class, ClassDTO>().ReverseMap();
             CreateMap<Grade, GradeDTO>().ReverseMap();
             CreateMap<Permission, PermissionDTO>().ReverseMap();
@@ -34,7 +38,12 @@ namespace TestLabWebAPI
 
             CreateMap<StudentTestDetail, StudentTestDetailDTO>().ReverseMap();
             CreateMap<Subject, SubjectDTO>().ReverseMap();
-            CreateMap<Teacher, TeacherDTO>().ReverseMap();
+
+            CreateMap<Teacher, TeacherDTO>()
+                .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthday.ToString()));
+            CreateMap<TeacherDTO, Teacher>()
+                .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => ParseDate(src.Birthday)));
+
             CreateMap<Test, TestDTO>().ReverseMap();
         }
         

@@ -22,12 +22,4 @@ public partial class TestDTO
     public int IdStatus { get; set; }
 
     public DateTime? Timestamps { get; set; }
-
-    public virtual StatusDTO IdStatusNavigation { get; set; } = null!;
-
-    public virtual SubjectDTO IdSubjectNavigation { get; set; } = null!;
-
-    public virtual ICollection<QuestsOfTestDTO> QuestsOfTests { get; set; } = new List<QuestsOfTestDTO>();
-
-    public virtual ICollection<ScoreDTO> Scores { get; set; } = new List<ScoreDTO>();
 }

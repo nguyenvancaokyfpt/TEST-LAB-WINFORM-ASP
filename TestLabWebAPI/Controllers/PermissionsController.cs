@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,10 +16,12 @@ namespace TestLabWebAPI.Controllers
     public class PermissionsController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public PermissionsController(TracNghiemOnlineContext context)
+        public PermissionsController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Permissions
@@ -44,12 +48,16 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/Permissions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPermission(int id, Permission permission)
+        public async Task<IActionResult> PutPermission(int id, PermissionDTO permissionDTO)
         {
+            var permission = _context.Permissions.Find(id);
+
             if (id != permission.IdPermission)
             {
                 return BadRequest();
             }
+
+            permission = _mapper.Map(permissionDTO, permission);
 
             _context.Entry(permission).State = EntityState.Modified;
 
@@ -75,8 +83,9 @@ namespace TestLabWebAPI.Controllers
         // POST: api/Permissions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Permission>> PostPermission(Permission permission)
+        public async Task<ActionResult<Permission>> PostPermission(PermissionDTO permissionDTO)
         {
+            var permission = _mapper.Map<Permission>(permissionDTO);
             _context.Permissions.Add(permission);
             await _context.SaveChangesAsync();
 

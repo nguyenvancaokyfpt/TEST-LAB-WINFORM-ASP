@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,10 +16,12 @@ namespace TestLabWebAPI.Controllers
     public class SubjectsController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public SubjectsController(TracNghiemOnlineContext context)
+        public SubjectsController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Subjects
@@ -44,13 +48,10 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/Subjects/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSubject(int id, Subject subject)
+        public async Task<IActionResult> PutSubject(int id, SubjectDTO subjectDTO)
         {
-            if (id != subject.IdSubject)
-            {
-                return BadRequest();
-            }
-
+            var subject = _mapper.Map<Subject>(subjectDTO);
+            subject.IdSubject = id;
             _context.Entry(subject).State = EntityState.Modified;
 
             try
@@ -75,8 +76,9 @@ namespace TestLabWebAPI.Controllers
         // POST: api/Subjects
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Subject>> PostSubject(Subject subject)
+        public async Task<ActionResult<Subject>> PostSubject(SubjectDTO subjectDTO)
         {
+            var subject = _mapper.Map<Subject>(subjectDTO);
             _context.Subjects.Add(subject);
             await _context.SaveChangesAsync();
 

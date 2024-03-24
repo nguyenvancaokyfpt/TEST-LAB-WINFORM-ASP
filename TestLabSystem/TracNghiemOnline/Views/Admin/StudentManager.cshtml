@@ -19,6 +19,20 @@
     }
 </div>
 <div class="content row col s12">
+    @foreach (var item in List)
+    {
+        <!-- Modal Structure -->
+        <div id="delete-@item.student.id_student" class="modal">
+            <div class="modal-content">
+                <h4>Xác Nhận</h4>
+                <p>Bạn có xóa tài khoản @item.student.name</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                <a href="#" onclick="deleteStudent(@item.student.id_student)" class="modal-close waves-effect waves-green btn-flat">Có</a>
+            </div>
+        </div>
+    }
     @using (Html.BeginForm("DeleteStudent", "Admin", FormMethod.Post))
     {
         <table class="striped centered" id="students-table">
@@ -47,54 +61,7 @@
                 </tr>
             </thead>
 
-            <tbody>
-                @foreach (var item in List)
-                {
-                    <tr>
-                        <td>@item.student.id_student</td>
-                        <td>@item.student.username</td>
-                        <td>@item.student.email</td>
-                        <td>@item.student.name</td>
-                        <td>@item.student.gender</td>
-                        <td>@item.student.birthday.Date.ToString("dd-MM-yyyy")</td>
-                        <td>Lớp @item.Class.class_name <br />Ngành @item.speciality.speciality_name</td>
-                        <td>
-                            @if (item.student.last_seen == null)
-                            {
-                                <span>Chưa từng online</span>
-                            }
-                            else
-                            {
-                                <span>Online lần cuối lúc</span><br />
-                                @String.Format("{0:dd'-'MM'-'yyyy HH':'mm':'ss}", item.student.last_login) <br /><span>tại</span>
-                                <a href="@item.student.last_seen_url">@item.student.last_seen</a>
-                            }
-                        </td>
-                        <td>
-                            <p>
-                                <label>
-                                    <input type="checkbox" class="checkbox" name="checkbox" value="@item.student.id_student" onchange="check_box()" />
-                                    <span></span>
-                                </label>
-                            </p>
-                        </td>
-                        <td>
-                            <a href="@Url.Action("EditStudent/" + item.student.id_student)"><i class="material-icons">edit</i></a>
-                            <a class="modal-trigger" href="#delete-@item.student.id_student"><i class="material-icons">delete</i></a>
-                        </td>
-                    </tr>
-                    <!-- Modal Structure -->
-                    <div id="delete-@item.student.id_student" class="modal">
-                        <div class="modal-content">
-                            <h4>Xác Nhận</h4>
-                            <p>Bạn có xóa tài khoản @item.student.name</p>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
-                            <a href="@Url.Action("DeleteStudent/" + item.student.id_student)" class="modal-close waves-effect waves-green btn-flat">Có</a>
-                        </div>
-                    </div>
-                }
+            <tbody id="students-table-data">
             </tbody>
         </table>
     }
@@ -103,34 +70,35 @@
     <div class="row">
         <div class="col s12">
             <ul class="tabs">
-                <li class="tab col s6"><a href="#add_normal" class="active" style="color: #f27024; font-weight: bold;">Thêm Sinh Viên</a></li>
-                <li class="tab col s6"><a href="#_add_via_file" style="color: #f27024; font-weight: bold;">Thêm Bằng File</a></li>
+                <li class="tab col s4"><a href="#add_normal" class="active" style="color: #f27024; font-weight: bold;">Thêm Sinh Viên</a></li>
+                <li class="tab col s4"><a href="#_add_via_file" style="color: #f27024; font-weight: bold;">Thêm Bằng File</a></li>
+                <li class="tab col s4"><a href="#_export_file" style="color: #f27024; font-weight: bold;">Xuất file</a></li>
             </ul>
         </div>
         <div id="add_normal" class="col s12">
             @using (Html.BeginForm("AddStudent", "Admin", FormMethod.Post))
             {
-            <div class="col l6 s12">
-                <div class="input-field">
-                    <label for="name">Tên <span class="failed">(*)</span></label>
-                    <input type="text" id="name" name="name" onchange="" required>
+                <div class="col l6 s12">
+                    <div class="input-field">
+                        <label for="name">Tên <span class="failed">(*)</span></label>
+                        <input type="text" id="name" name="name" onchange="" required>
+                    </div>
+                    <div class="input-field">
+                        <label for="username">Tài khoản <span class="failed">(*)</span></label>
+                        <input type="text" name="username" id="username" required>
+                    </div>
+                    <div class="input-field">
+                        <label for="password">Mật khẩu <span class="failed">(*)</span></label>
+                        <input type="password" data-minlength="6" name="password" id="password" required>
+                    </div>
+                    <div class="input-field">
+                        <select name="gender" id="gender" required>
+                            <option value="Nam" selected>Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                        <label>Giới Tính</label>
+                    </div>
                 </div>
-                <div class="input-field">
-                    <label for="username">Tài khoản <span class="failed">(*)</span></label>
-                    <input type="text" name="username" id="username" required>
-                </div>
-                <div class="input-field">
-                    <label for="password">Mật khẩu <span class="failed">(*)</span></label>
-                    <input type="password" data-minlength="6" name="password" id="password" required>
-                </div>
-                <div class="input-field">
-                    <select name="gender" id="gender" required>
-                        <option value="Nam" selected>Nam</option>
-                        <option value="Nữ">Nữ</option>
-                    </select>
-                    <label>Giới Tính</label>
-                </div>
-            </div>
                 <div class="col l6 s12">
                     <div class="input-field">
                         <label for="email">Email <span class="failed">(*)</span></label>
@@ -166,31 +134,90 @@
         <div id="_add_via_file" class="col s12">
             <span class="title">Chức Năng Đang Xây Dựng!</span>
         </div>
+        <div id="_export_file" class="col s12">
+            @*Sellect Class to Export*@
+            <div class="input-field col s12">
+                <select name="id_class_ex" id="id_class_ex" required>
+                    @foreach (var item in ListClass)
+                    {
+                        <option value="@item.id_class">@item.class_name</option>
+                    }
+                </select>
+                <label>Lớp</label>
+            </div>
+            <div class="col s12">
+                <button type="submit" class="btn full-width" id="export-student" name="export-student">Xuất File</button>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+    function get_list_admins() {
+        var url = "http://localhost:5023/api/Students";
+        var success = function (result) {
+            show_list_admins(result);
+        };
+        $.get(url, success);
+    }
+
+    function show_list_admins(data) {
+        var list = $('#students-table-data');
+        list.empty();
+        for (var i = 0; i < data.length; i++) {
+            var admin = data[i];
+            var tr = $('<tr></tr>');
+            tr.append('<td>' + admin.idStudent + '</td>');
+            tr.append('<td>' + admin.username + '</td>');
+            tr.append('<td>' + admin.email + '</td>');
+            tr.append('<td>' + admin.name + '</td>');
+            tr.append('<td>' + admin.gender + '</td>');
+            tr.append('<td>' + admin.birthday + '</td>');
+            tr.append('<td>' + admin.idClassNavigation.className + ' | ' + admin.idSpecialityNavigation.specialityName + '</td>');
+            let td = $('<td></td>');
+            if (admin.lastLogin == null) {
+                td.append('<span>Chưa từng online</span>');
+            } else {
+                let lastLogin = new Date(admin.lastLogin);
+                // format dd-MM-yyyy HH:mm:ss
+                lastLogin = lastLogin.getDate() + '-' + (lastLogin.getMonth() + 1) + '-' + lastLogin.getFullYear() + ' ' + lastLogin.getHours() + ':' + lastLogin.getMinutes() + ':' + lastLogin.getSeconds();
+                td.html('<span>Online lần cuối lúc</span><br />' + lastLogin + '<br /><span>tại </span><a href="' + admin.lastSeenUrl + '">' + admin.lastSeen + '</a>');
+            }
+            tr.append(td);
+            tr.append('<td><p><label><input type="checkbox" class="checkbox" name="checkbox" value="' + admin.idStudent + '" onchange="check_box()"><span></span></label></p></td>');
+            tr.append('<td> <a href="EditStudent/' + admin.idStudent + '"><i class="material-icons">edit</i></a> <a class="modal-trigger" href="#delete-' + admin.idStudent + '"><i class="material-icons">delete</i></a></td>');
+            list.append(tr);
+        }
+        $('#students-table').DataTable({
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_",
+                "zeroRecords": "Không tìm thấy",
+                "info": "Hiển thị trang _PAGE_/_PAGES_",
+                "infoEmpty": "Không có dữ liệu",
+                "emptyTable": "Không có dữ liệu",
+                "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+                "sSearch": "Tìm kiếm",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Sau",
+                    "previous": "Trước"
+                }
+            },
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [8, 9] }
+            ]
+        });
+    }
+    $(function () {
+        get_list_admins();
+    });
+</script>
+
 <script>
     $('.tabs').tabs();
     $('.modal').modal();
-    $('#students-table').DataTable({
-        "language": {
-            "lengthMenu": "Hiển thị _MENU_",
-            "zeroRecords": "Không tìm thấy",
-            "info": "Hiển thị trang _PAGE_/_PAGES_",
-            "infoEmpty": "Không có dữ liệu",
-            "emptyTable": "Không có dữ liệu",
-            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
-            "sSearch": "Tìm kiếm",
-            "paginate": {
-                "first": "Đầu",
-                "last": "Cuối",
-                "next": "Sau",
-                "previous": "Trước"
-            }
-        },
-        "aoColumnDefs": [
-            { "bSortable": false, "aTargets": [8 , 9] }
-        ]
-    });
+
     $('select').select();
     $('#checked-all').on('change', function () {
         if (this.checked) {
@@ -221,5 +248,27 @@
             $('#icon-settings').addClass('hidden');
             $('#icon-delete-all').removeClass('hidden');
         }
+    }
+
+    // handle export file click
+    $('#export-student').on('click', function () {
+        var id_class = $('#id_class_ex').val();
+        var url = "http://localhost:5023/api/ExportExcel/ClassStudents/ " + id_class;
+        window.location.href = url;
+    });
+
+    // handle delete student
+    function deleteStudent(id) {
+        $.ajax({
+            url: 'http://localhost:5023/api/Students/' + id,
+            type: 'DELETE',
+            success: function (result) {
+                // redirect to student  manager /Admin/EditStudent
+                window.location.href = "http://localhost:60000/Admin/StudentManager";
+            },
+            error: function (error) {
+                alert("Xóa thất bại");
+            }
+        });
     }
 </script>

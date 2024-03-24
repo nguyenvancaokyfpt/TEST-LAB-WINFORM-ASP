@@ -18,6 +18,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
+// CROSS ORIGIN
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy("CORSPolicy", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed((host) => true));
+});
+
+
 
 
 var app = builder.Build();
@@ -28,6 +35,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// CROSS ORIGIN
+app.UseCors("CORSPolicy");
 
 app.UseAuthorization();
 

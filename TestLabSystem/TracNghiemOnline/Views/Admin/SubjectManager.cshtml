@@ -17,6 +17,20 @@
     }
 </div>
 <div class="content row col s12">
+    @foreach (var item in List)
+    {
+        <!-- Modal Structure -->
+        <div id="delete-@item.id_subject" class="modal">
+            <div class="modal-content">
+                <h4>Xác Nhận</h4>
+                <p>Bạn có xóa môn @item.subject_name</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                <a href="@Url.Action("DeleteSubject/" + item.id_subject)" class="modal-close waves-effect waves-green btn-flat">Có</a>
+            </div>
+        </div>
+    }
     @using (Html.BeginForm("DeleteSubject", "Admin", FormMethod.Post))
     {
         <table class="striped centered" id="subjects-table">
@@ -39,37 +53,7 @@
                 </tr>
             </thead>
 
-            <tbody>
-                @foreach (var item in List)
-                {
-                    <tr>
-                        <td>@item.id_subject</td>
-                        <td>@item.subject_name</td>
-                        <td>
-                            <p>
-                                <label>
-                                    <input type="checkbox" class="checkbox" name="checkbox" value="@item.id_subject" onchange="check_box()" />
-                                    <span></span>
-                                </label>
-                            </p>
-                        </td>
-                        <td>
-                            <a href="@Url.Action("EditSubject/" + item.id_subject)"><i class="material-icons">edit</i></a>
-                            <a class="modal-trigger" href="#delete-@item.id_subject"><i class="material-icons">delete</i></a>
-                        </td>
-                    </tr>
-                    <!-- Modal Structure -->
-                    <div id="delete-@item.id_subject" class="modal">
-                        <div class="modal-content">
-                            <h4>Xác Nhận</h4>
-                            <p>Bạn có xóa môn @item.subject_name</p>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
-                            <a href="@Url.Action("DeleteSubject/" + item.id_subject)" class="modal-close waves-effect waves-green btn-flat">Có</a>
-                        </div>
-                    </div>
-                }
+            <tbody id="specialities-table-data">
             </tbody>
         </table>
     }
@@ -97,26 +81,55 @@
         </div>
     </div>
 </div>
+
+<script>
+    function get_list_subject() {
+        var url = "http://localhost:5023/api/Subjects";
+        var success = function (result) {
+            show_list_subject(result);
+        };
+        $.get(url, success);
+    }
+
+    function show_list_subject(data) {
+        var list = $('#specialities-table-data');
+        list.empty();
+        for (var i = 0; i < data.length; i++) {
+            var subject = data[i];
+            var tr = $('<tr></tr>');
+            tr.append('<td>' + subject.idSubject + '</td>');
+            tr.append('<td>' + subject.subjectName + '</td>');
+            tr.append('<td><p><label><input type="checkbox" class="checkbox" name="checkbox" value="' + subject.idSubject + '" onchange="check_box()"><span></span></label></p></td>');
+            tr.append('<td> <a href="EditSubject/' + subject.idSubject + '"><i class="material-icons">edit</i></a> <a class="modal-trigger" href="#delete-' + subject.idSubject + '"><i class="material-icons">delete</i></a></td>');
+            list.append(tr);
+        }
+        $('#subjects-table').DataTable({
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_",
+                "zeroRecords": "Không tìm thấy",
+                "info": "Hiển thị trang _PAGE_/_PAGES_",
+                "infoEmpty": "Không có dữ liệu",
+                "emptyTable": "Không có dữ liệu",
+                "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+                "sSearch": "Tìm kiếm",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Sau",
+                    "previous": "Trước"
+                }
+            }
+        });
+    }
+    $(function () {
+        get_list_subject();
+    });
+</script>
+
 <script>
     $('.tabs').tabs();
     $('.modal').modal();
-    $('#subjects-table').DataTable({
-        "language": {
-            "lengthMenu": "Hiển thị _MENU_",
-            "zeroRecords": "Không tìm thấy",
-            "info": "Hiển thị trang _PAGE_/_PAGES_",
-            "infoEmpty": "Không có dữ liệu",
-            "emptyTable": "Không có dữ liệu",
-            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
-            "sSearch": "Tìm kiếm",
-            "paginate": {
-                "first": "Đầu",
-                "last": "Cuối",
-                "next": "Sau",
-                "previous": "Trước"
-            }
-        }
-    });
+
     $('select').select();
     $('#checked-all').on('change', function () {
         if (this.checked) {

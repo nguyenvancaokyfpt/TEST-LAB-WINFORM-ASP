@@ -18,24 +18,24 @@
     }
 </div>
 <div class="content row col s12">
-        <table class="striped centered" id="subjects-table">
-            <thead>
-                <tr>
-                    <th>Tên</th>
-                    <th>Mã Đề</th>
-                    <th>Môn</th>
-                    <th>Thông Tin</th>
-                    <th>Trạng Thái</th>
-                    <th>
-                        <i class="material-icons" id="icon-settings">settings</i>
-                        <input type="submit" class="material-icons hidden" value="delete_forever" style="background: none; border: none; cursor: pointer; color: red;" id="icon-delete-all" />
-                    </th>
-                </tr>
-            </thead>
+    <table class="striped centered" id="subjects-table">
+        <thead>
+            <tr>
+                <th>Tên</th>
+                <th>Mã Đề</th>
+                <th>Môn</th>
+                <th>Thông Tin</th>
+                <th>Trạng Thái</th>
+                <th>
+                    <i class="material-icons" id="icon-settings">settings</i>
+                    <input type="submit" class="material-icons hidden" value="delete_forever" style="background: none; border: none; cursor: pointer; color: red;" id="icon-delete-all" />
+                </th>
+            </tr>
+        </thead>
 
-            <tbody>
-                @foreach (var item in List)
-                {
+        <tbody>
+            @foreach (var item in List)
+            {
                 <tr>
                     <td>@item.test.test_name</td>
                     <td>@item.test.test_code</td>
@@ -48,16 +48,17 @@
                         <a href="@Url.Action("TestDetail/" + item.test.test_code)">Chi tiết đề thi</a>
                     </td>
                 </tr>
-                }
-            </tbody>
-        </table>
+            }
+        </tbody>
+    </table>
 </div>
 <div class="content">
     <div class="row" style="padding-top: 10px">
         <div class="col s12">
             <ul class="tabs">
-                <li class="tab col s6"><a href="#add_normal" class="active" style="color: #f27024; font-weight: bold;">Tạo Đề Thi</a></li>
-                <li class="tab col s6"><a href="#_add_via_file" style="color: #f27024; font-weight: bold;">Thêm Bằng File</a></li>
+                <li class="tab col s4"><a href="#add_normal" class="active" style="color: #f27024; font-weight: bold;">Tạo Đề Thi</a></li>
+                <li class="tab col s4"><a href="#_add_via_file" style="color: #f27024; font-weight: bold;">Thêm Bằng File</a></li>
+                <li class="tab col s4"><a href="#_export_file" style="color: #f27024; font-weight: bold;">Xuất file</a></li>
             </ul>
         </div>
         <div id="add_normal" class="col s12">
@@ -102,6 +103,21 @@
         <div id="_add_via_file" class="col s12">
             <span class="title">Chức Năng Đang Xây Dựng!</span>
         </div>
+        <div id="_export_file" class="col s12">
+            @*Sellect test to export*@
+            <div class="input-field">
+                <select name="id_test_ex" id="id_test_ex" required>
+                    <option disabled selected>Chọn</option>
+                    @foreach (var item in List)
+                    {
+                        <option value="@item.test.test_code">@item.test.test_name</option>
+                    }
+                </select>
+                <label>Chọn đề thi</label>
+
+                <button type="submit" class="btn full-width" id="export-test-score" name="export-test-score">Xuất file</button>
+            </div>
+        </div>
     </div>
 </div>
 <script>
@@ -128,7 +144,7 @@
     function get_units(id) {
         var list = $('#list-unit');
         list.empty();
-        var url = "/Admin/GetJsonUnits/"+ id;
+        var url = "/Admin/GetJsonUnits/" + id;
         var success = function (result) {
             if (result.length <= 0) {
                 var item = '<div class="input-field"><input type="text" disabled value="Môn này hiện chưa có câu hỏi nào"></div>';
@@ -152,4 +168,11 @@
         });
         $('#total_question').val(sum);
     }
+
+    // handle export file click
+    $('#export-test-score').on('click', function () {
+        var id_code = $('#id_test_ex').val();
+        var url = "http://localhost:5023/api/ExportExcel/TestScores/ " + id_code;
+        window.location.href = url;
+    });
 </script>

@@ -28,7 +28,15 @@ namespace TestLabWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
-            return await _context.Students.ToListAsync();
+            var students = await _context.Students
+                .Include(s => s.IdClassNavigation)
+                .Include(s => s.IdSpecialityNavigation)
+                .ToListAsync();
+            foreach (var student in students)
+            {
+                student.Password = null;
+            }
+            return students;
         }
 
         // GET: api/Students/5
@@ -41,6 +49,7 @@ namespace TestLabWebAPI.Controllers
             {
                 return NotFound();
             }
+            student.Password = null;
 
             return student;
         }
@@ -101,10 +110,19 @@ namespace TestLabWebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            var student = await _context.Students
+                .FindAsync(id);
             if (student == null)
             {
                 return NotFound();
+            }
+
+            var scores = await _context.Scores
+                .Where(s => s.IdStudent == id)
+                .ToListAsync();
+            foreach (var score in scores)
+            {
+                _context.Scores.Remove(score);
             }
 
             _context.Students.Remove(student);
@@ -112,6 +130,8 @@ namespace TestLabWebAPI.Controllers
 
             return NoContent();
         }
+
+
 
         private bool StudentExists(int id)
         {

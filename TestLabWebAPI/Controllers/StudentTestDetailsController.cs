@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,10 +16,12 @@ namespace TestLabWebAPI.Controllers
     public class StudentTestDetailsController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public StudentTestDetailsController(TracNghiemOnlineContext context)
+        public StudentTestDetailsController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/StudentTestDetails
@@ -31,7 +35,7 @@ namespace TestLabWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<StudentTestDetail>> GetStudentTestDetail(int id)
         {
-            var studentTestDetail = await _context.StudentTestDetails.FindAsync(id);
+            var studentTestDetail = _context.StudentTestDetails.FirstOrDefault(td => td.Id == id);
 
             if (studentTestDetail == null)
             {
@@ -44,13 +48,10 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/StudentTestDetails/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStudentTestDetail(int id, StudentTestDetail studentTestDetail)
+        public async Task<IActionResult> PutStudentTestDetail(int id, StudentTestDetailDTO studentTestDetailDTO)
         {
-            if (id != studentTestDetail.IdStudent)
-            {
-                return BadRequest();
-            }
-
+            var studentTestDetail = _mapper.Map<StudentTestDetail>(studentTestDetailDTO);
+            studentTestDetail.IdStudent = id;
             _context.Entry(studentTestDetail).State = EntityState.Modified;
 
             try
@@ -75,8 +76,9 @@ namespace TestLabWebAPI.Controllers
         // POST: api/StudentTestDetails
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<StudentTestDetail>> PostStudentTestDetail(StudentTestDetail studentTestDetail)
+        public async Task<ActionResult<StudentTestDetail>> PostStudentTestDetail(StudentTestDetailDTO studentTestDetailDTO)
         {
+            var studentTestDetail = _mapper.Map<StudentTestDetail>(studentTestDetailDTO);
             _context.StudentTestDetails.Add(studentTestDetail);
             try
             {
@@ -101,7 +103,7 @@ namespace TestLabWebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudentTestDetail(int id)
         {
-            var studentTestDetail = await _context.StudentTestDetails.FindAsync(id);
+            var studentTestDetail = _context.StudentTestDetails.FirstOrDefault(td => td.Id == id);
             if (studentTestDetail == null)
             {
                 return NotFound();

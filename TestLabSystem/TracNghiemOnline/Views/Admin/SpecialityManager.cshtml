@@ -17,6 +17,20 @@
     }
 </div>
 <div class="content row col s12">
+    @foreach (var item in List)
+    {
+        <!-- Modal Structure -->
+        <div id="delete-@item.id_speciality" class="modal">
+            <div class="modal-content">
+                <h4>Xác Nhận</h4>
+                <p>Bạn có xóa ngành @item.speciality_name</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                <a href="@Url.Action("DeleteSpeciality/" + item.id_speciality)" class="modal-close waves-effect waves-green btn-flat">Có</a>
+            </div>
+        </div>
+    }
     @using (Html.BeginForm("DeleteSpeciality", "Admin", FormMethod.Post))
     {
         <table class="striped centered" id="specialities-table">
@@ -39,37 +53,7 @@
                 </tr>
             </thead>
 
-            <tbody>
-                @foreach (var item in List)
-                {
-                    <tr>
-                        <td>@item.id_speciality</td>
-                        <td>@item.speciality_name</td>
-                        <td>
-                            <p>
-                                <label>
-                                    <input type="checkbox" class="checkbox" name="checkbox" value="@item.id_speciality" onchange="check_box()" />
-                                    <span></span>
-                                </label>
-                            </p>
-                        </td>
-                        <td>
-                            <a href="@Url.Action("EditSpeciality/" + item.id_speciality)"><i class="material-icons">edit</i></a>
-                            <a class="modal-trigger" href="#delete-@item.id_speciality"><i class="material-icons">delete</i></a>
-                        </td>
-                    </tr>
-                    <!-- Modal Structure -->
-                    <div id="delete-@item.id_speciality" class="modal">
-                        <div class="modal-content">
-                            <h4>Xác Nhận</h4>
-                            <p>Bạn có xóa ngành @item.speciality_name</p>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
-                            <a href="@Url.Action("DeleteSpeciality/" + item.id_speciality)" class="modal-close waves-effect waves-green btn-flat">Có</a>
-                        </div>
-                    </div>
-                }
+            <tbody id="specialities-table-data">
             </tbody>
         </table>
     }
@@ -97,26 +81,54 @@
         </div>
     </div>
 </div>
+
+<script>
+    function get_list_speciality() {
+        var url = "http://localhost:5023/api/Specialities";
+        var success = function (result) {
+            show_list_speciality(result);
+        };
+        $.get(url, success);
+    }
+
+    function show_list_speciality(data) {
+        var list = $('#specialities-table-data');
+        list.empty();
+        for (var i = 0; i < data.length; i++) {
+            var speciality = data[i];
+            var tr = $('<tr></tr>');
+            tr.append('<td>' + speciality.idSpeciality + '</td>');
+            tr.append('<td>' + speciality.specialityName + '</td>');
+            tr.append('<td><p><label><input type="checkbox" class="checkbox" name="checkbox" value="' + speciality.idSpeciality + '" onchange="check_box()"><span></span></label></p></td>');
+            tr.append('<td> <a href="EditSpeciality/' + speciality.idSpeciality + '"><i class="material-icons">edit</i></a> <a class="modal-trigger" href="#delete-' + speciality.idSpeciality + '"><i class="material-icons">delete</i></a></td>');
+            list.append(tr);
+        }
+        $('#specialities-table').DataTable({
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_",
+                "zeroRecords": "Không tìm thấy",
+                "info": "Hiển thị trang _PAGE_/_PAGES_",
+                "infoEmpty": "Không có dữ liệu",
+                "emptyTable": "Không có dữ liệu",
+                "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+                "sSearch": "Tìm kiếm",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Sau",
+                    "previous": "Trước"
+                }
+            }
+        });
+    }
+    $(function () {
+        get_list_speciality();
+    });
+</script>
 <script>
     $('.tabs').tabs();
     $('.modal').modal();
-    $('#specialities-table').DataTable({
-        "language": {
-            "lengthMenu": "Hiển thị _MENU_",
-            "zeroRecords": "Không tìm thấy",
-            "info": "Hiển thị trang _PAGE_/_PAGES_",
-            "infoEmpty": "Không có dữ liệu",
-            "emptyTable": "Không có dữ liệu",
-            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
-            "sSearch": "Tìm kiếm",
-            "paginate": {
-                "first": "Đầu",
-                "last": "Cuối",
-                "next": "Sau",
-                "previous": "Trước"
-            }
-        }
-    });
+
     $('select').select();
     $('#checked-all').on('change', function () {
         if (this.checked) {

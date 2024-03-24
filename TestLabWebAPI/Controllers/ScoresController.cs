@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,10 +16,12 @@ namespace TestLabWebAPI.Controllers
     public class ScoresController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public ScoresController(TracNghiemOnlineContext context)
+        public ScoresController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Scores
@@ -31,7 +35,7 @@ namespace TestLabWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Score>> GetScore(int id)
         {
-            var score = await _context.Scores.FindAsync(id);
+            var score = _context.Scores.FirstOrDefault(s => s.IdScore == id);
 
             if (score == null)
             {
@@ -44,30 +48,20 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/Scores/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutScore(int id, Score score)
+        public async Task<IActionResult> PutScore(int id, ScoreDTO scoreDTO)
         {
+            var score = _context.Scores.FirstOrDefault(s => s.IdScore == id);
+
             if (id != score.IdStudent)
             {
                 return BadRequest();
             }
 
+            score = _mapper.Map(scoreDTO, score);
+
             _context.Entry(score).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ScoreExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -75,24 +69,11 @@ namespace TestLabWebAPI.Controllers
         // POST: api/Scores
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Score>> PostScore(Score score)
+        public async Task<ActionResult<Score>> PostScore(ScoreDTO scoreDTO)
         {
+            var score = _mapper.Map<Score>(scoreDTO);
             _context.Scores.Add(score);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ScoreExists(score.IdStudent))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetScore", new { id = score.IdStudent }, score);
         }
@@ -101,7 +82,7 @@ namespace TestLabWebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteScore(int id)
         {
-            var score = await _context.Scores.FindAsync(id);
+            var score = _context.Scores.FirstOrDefault(s => s.IdScore == id);
             if (score == null)
             {
                 return NotFound();

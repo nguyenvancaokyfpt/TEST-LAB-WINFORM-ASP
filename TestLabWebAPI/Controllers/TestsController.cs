@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,10 +16,12 @@ namespace TestLabWebAPI.Controllers
     public class TestsController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public TestsController(TracNghiemOnlineContext context)
+        public TestsController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Tests
@@ -44,12 +48,10 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/Tests/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTest(int id, Test test)
+        public async Task<IActionResult> PutTest(int id, TestDTO testDTO)
         {
-            if (id != test.TestCode)
-            {
-                return BadRequest();
-            }
+            var test = _mapper.Map<Test>(testDTO);
+            test.Password = Encryptor.MD5Hash(test.Password);
 
             _context.Entry(test).State = EntityState.Modified;
 
@@ -75,8 +77,11 @@ namespace TestLabWebAPI.Controllers
         // POST: api/Tests
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Test>> PostTest(Test test)
+        public async Task<ActionResult<Test>> PostTest(TestDTO testDTO)
         {
+            var test = _mapper.Map<Test>(testDTO);
+            test.Password = Encryptor.MD5Hash(test.Password);
+
             _context.Tests.Add(test);
             try
             {
@@ -111,6 +116,15 @@ namespace TestLabWebAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("GetMaxCode")]
+        public async Task<ActionResult<int>> GetMaxCode()
+        {
+            var maxCode = await _context.Tests.MaxAsync(t => t.TestCode);
+            if (maxCode == null || maxCode == default)
+                maxCode = 0;
+            return maxCode;
         }
 
         private bool TestExists(int id)

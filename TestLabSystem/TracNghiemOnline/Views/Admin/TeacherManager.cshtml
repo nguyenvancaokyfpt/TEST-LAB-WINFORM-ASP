@@ -18,6 +18,20 @@
     }
 </div>
 <div class="content row col s12">
+    @foreach (var item in List)
+    {
+        <!-- Modal Structure -->
+        <div id="delete-@item.teacher.id_teacher" class="modal">
+            <div class="modal-content">
+                <h4>Xác Nhận</h4>
+                <p>Bạn có xóa tài khoản @item.teacher.name</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                <a href="@Url.Action("DeleteTeacher/" + item.teacher.id_teacher)" class="modal-close waves-effect waves-green btn-flat">Có</a>
+            </div>
+        </div>
+    }
     @using (Html.BeginForm("DeleteTeacher", "Admin", FormMethod.Post))
     {
         <table class="striped centered" id="teachers-table">
@@ -46,54 +60,7 @@
                 </tr>
             </thead>
 
-            <tbody>
-                @foreach (var item in List)
-                {
-                <tr>
-                    <td>@item.teacher.id_teacher</td>
-                    <td>@item.teacher.username</td>
-                    <td>@item.teacher.email</td>
-                    <td>@item.teacher.name</td>
-                    <td>@item.teacher.gender</td>
-                    <td>@item.teacher.birthday.Date.ToString("dd-MM-yyyy")</td>
-                    <td>@item.speciality.speciality_name</td>
-                    <td>
-                        @if (item.teacher.last_seen == null)
-                        {
-                            <span>Chưa từng online</span>
-                        }
-                        else
-                        {
-                            <span>Online lần cuối lúc</span><br />
-                            @String.Format("{0:dd'-'MM'-'yyyy HH':'mm':'ss}", item.teacher.last_login) <br /><span>tại</span>
-                            <a href="@item.teacher.last_seen_url">@item.teacher.last_seen</a>
-                        }
-                    </td>
-                    <td>
-                        <p>
-                            <label>
-                                <input type="checkbox" class="checkbox" name="checkbox" value="@item.teacher.id_teacher" onchange="check_box()" />
-                                <span></span>
-                            </label>
-                        </p>
-                    </td>
-                    <td>
-                        <a href="@Url.Action("EditTeacher/" + item.teacher.id_teacher)"><i class="material-icons">edit</i></a>
-                        <a class="modal-trigger" href="#delete-@item.teacher.id_teacher"><i class="material-icons">delete</i></a>
-                    </td>
-                </tr>
-                    <!-- Modal Structure -->
-                    <div id="delete-@item.teacher.id_teacher" class="modal">
-                        <div class="modal-content">
-                            <h4>Xác Nhận</h4>
-                            <p>Bạn có xóa tài khoản @item.teacher.name</p>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
-                            <a href="@Url.Action("DeleteTeacher/" + item.teacher.id_teacher)" class="modal-close waves-effect waves-green btn-flat">Có</a>
-                        </div>
-                    </div>
-                }
+            <tbody id="teachers-table-data">
             </tbody>
         </table>
     }
@@ -135,7 +102,7 @@
                         <select name="id_speciality" id="id_speciality" required>
                             @foreach (var item in ListSpecialities)
                             {
-                            <option value="@item.id_speciality">@item.speciality_name</option>
+                                <option value="@item.id_speciality">@item.speciality_name</option>
                             }
                         </select>
                         <label>Ngành</label>
@@ -159,28 +126,71 @@
     </div>
 </div>
 <script>
+    function get_list_admins() {
+        var url = "http://localhost:5023/api/Teachers";
+        var success = function (result) {
+            show_list_admins(result);
+        };
+        $.get(url, success);
+    }
+
+    function show_list_admins(data) {
+        var list = $('#teachers-table-data');
+        list.empty();
+        for (var i = 0; i < data.length; i++) {
+            var admin = data[i];
+            var tr = $('<tr></tr>');
+            tr.append('<td>' + admin.idTeacher + '</td>');
+            tr.append('<td>' + admin.username + '</td>');
+            tr.append('<td>' + admin.email + '</td>');
+            tr.append('<td>' + admin.name + '</td>');
+            tr.append('<td>' + admin.gender + '</td>');
+            tr.append('<td>' + admin.birthday + '</td>');
+            tr.append('<td>' + admin.idSpecialityNavigation.specialityName + '</td>');
+            let td = $('<td></td>');
+            if (admin.lastLogin == null) {
+                td.append('<span>Chưa từng online</span>');
+            } else {
+                let lastLogin = new Date(admin.lastLogin);
+                // format dd-MM-yyyy HH:mm:ss
+                lastLogin = lastLogin.getDate() + '-' + (lastLogin.getMonth() + 1) + '-' + lastLogin.getFullYear() + ' ' + lastLogin.getHours() + ':' + lastLogin.getMinutes() + ':' + lastLogin.getSeconds();
+                td.html('<span>Online lần cuối lúc</span><br />' + lastLogin + '<br /><span>tại </span><a href="' + admin.lastSeenUrl + '">' + admin.lastSeen + '</a>');
+            }
+            tr.append(td);
+            tr.append('<td><p><label><input type="checkbox" class="checkbox" name="checkbox" value="' + admin.idTeacher + '" onchange="check_box()"><span></span></label></p></td>');
+            tr.append('<td> <a href="EditTeacher/' + admin.idTeacher + '"><i class="material-icons">edit</i></a> <a class="modal-trigger" href="#delete-' + admin.idTeacher + '"><i class="material-icons">delete</i></a></td>');
+           
+            list.append(tr);
+        }
+        $('#teachers-table').DataTable({
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_",
+                "zeroRecords": "Không tìm thấy",
+                "info": "Hiển thị trang _PAGE_/_PAGES_",
+                "infoEmpty": "Không có dữ liệu",
+                "emptyTable": "Không có dữ liệu",
+                "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+                "sSearch": "Tìm kiếm",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Sau",
+                    "previous": "Trước"
+                }
+            },
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [8, 9] }
+            ]
+        });
+    }
+    $(function () {
+        get_list_admins();
+    });
+</script>
+
+<script>
     $('.tabs').tabs();
     $('.modal').modal();
-    $('#teachers-table').DataTable({
-        "language": {
-            "lengthMenu": "Hiển thị _MENU_",
-            "zeroRecords": "Không tìm thấy",
-            "info": "Hiển thị trang _PAGE_/_PAGES_",
-            "infoEmpty": "Không có dữ liệu",
-            "emptyTable": "Không có dữ liệu",
-            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
-            "sSearch": "Tìm kiếm",
-            "paginate": {
-                "first": "Đầu",
-                "last": "Cuối",
-                "next": "Sau",
-                "previous": "Trước"
-            }
-        },
-        "aoColumnDefs": [
-            { "bSortable": false, "aTargets": [8 , 9] }
-        ]
-    });
     $('select').select();
     $('#checked-all').on('change', function () {
         if (this.checked) {

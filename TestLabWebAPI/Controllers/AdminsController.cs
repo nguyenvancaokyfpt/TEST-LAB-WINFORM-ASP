@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,17 +16,24 @@ namespace TestLabWebAPI.Controllers
     public class AdminsController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public AdminsController(TracNghiemOnlineContext context)
+        public AdminsController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Admins
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Admin>>> GetAdmins()
         {
-            return await _context.Admins.ToListAsync();
+            var admins = await _context.Admins.ToListAsync();
+            foreach (var admin in admins)
+            {
+                admin.Password = null;
+            }
+            return admins;
         }
 
         // GET: api/Admins/5
@@ -37,6 +46,7 @@ namespace TestLabWebAPI.Controllers
             {
                 return NotFound();
             }
+            admin.Password = null;
 
             return admin;
         }
@@ -44,12 +54,16 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/Admins/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAdmin(int id, Admin admin)
+        public async Task<IActionResult> PutAdmin(int id, AdminDTO adminDTO)
         {
+            var admin = _context.Admins.Find(id);
+
             if (id != admin.IdAdmin)
             {
                 return BadRequest();
             }
+
+            admin = _mapper.Map(adminDTO, admin);
 
             _context.Entry(admin).State = EntityState.Modified;
 
@@ -75,12 +89,16 @@ namespace TestLabWebAPI.Controllers
         // POST: api/Admins
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Admin>> PostAdmin(Admin admin)
+        public async Task<ActionResult<Admin>> PostAdmin(AdminDTO admin)
         {
-            _context.Admins.Add(admin);
+            // md5 password
+            admin.Password = Encryptor.MD5Hash(admin.Password);
+
+            var admin2 = _mapper.Map<Admin>(admin);
+            _context.Admins.Add(admin2);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAdmin", new { id = admin.IdAdmin }, admin);
+            return CreatedAtAction("GetAdmin", new { id = admin2.IdAdmin }, admin2);
         }
 
         // DELETE: api/Admins/5

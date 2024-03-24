@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestLabWebAPI.DTOs;
 using TestLabWebAPI.Models;
 
 namespace TestLabWebAPI.Controllers
@@ -14,10 +16,12 @@ namespace TestLabWebAPI.Controllers
     public class GradesController : ControllerBase
     {
         private readonly TracNghiemOnlineContext _context;
+        private readonly IMapper _mapper;
 
-        public GradesController(TracNghiemOnlineContext context)
+        public GradesController(TracNghiemOnlineContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Grades
@@ -44,12 +48,16 @@ namespace TestLabWebAPI.Controllers
         // PUT: api/Grades/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGrade(int id, Grade grade)
+        public async Task<IActionResult> PutGrade(int id, GradeDTO gradeDTO)
         {
+            var grade = _context.Grades.Find(id);
+
             if (id != grade.IdGrade)
             {
                 return BadRequest();
             }
+
+            grade = _mapper.Map(gradeDTO, grade);
 
             _context.Entry(grade).State = EntityState.Modified;
 
@@ -75,8 +83,9 @@ namespace TestLabWebAPI.Controllers
         // POST: api/Grades
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Grade>> PostGrade(Grade grade)
+        public async Task<ActionResult<Grade>> PostGrade(GradeDTO gradeDTO)
         {
+            var grade = _mapper.Map<Grade>(gradeDTO);
             _context.Grades.Add(grade);
             await _context.SaveChangesAsync();
 

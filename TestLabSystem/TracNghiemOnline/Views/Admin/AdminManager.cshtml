@@ -17,6 +17,20 @@
     }
 </div>
 <div class="content row col s12">
+    @foreach (var admin in List)
+    {
+        <!-- Modal Structure -->
+        <div id="delete-@admin.id_admin" class="modal">
+            <div class="modal-content">
+                <h4>Xác Nhận</h4>
+                <p>Bạn có xóa tài khoản @admin.name</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
+                <a href="@Url.Action("DeleteAdmin/" + @admin.id_admin)" class="modal-close waves-effect waves-green btn-flat">Có</a>
+            </div>
+        </div>
+    }
     @using (Html.BeginForm("DeleteAdmin", "Admin", FormMethod.Post))
     {
         <table class="striped centered" id="admins-table">
@@ -39,63 +53,16 @@
                     </th>
                     <th>
                         <i class="material-icons" id="icon-settings">settings</i>
-                        <input type="submit" class="material-icons hidden" value="delete_forever" style="background: none; border: none; cursor: pointer; color: red;" id="icon-delete-all"/>
+                        <input type="submit" class="material-icons hidden" value="delete_forever" style="background: none; border: none; cursor: pointer; color: red;" id="icon-delete-all" />
                     </th>
                 </tr>
             </thead>
 
-            <tbody>
-                @foreach (var admin in List)
-                {
-                    <tr>
-                        <td>@admin.id_admin</td>
-                        <td>@admin.username</td>
-                        <td>@admin.email</td>
-                        <td>@admin.name</td>
-                        <td>@admin.gender</td>
-                        <td>@admin.birthday.Date.ToString("dd-MM-yyyy")</td>
-
-                        <td>
-                            @if (admin.last_seen == null)
-                            {
-                                <span>Chưa từng online</span>
-                            }
-                            else
-                            {
-                                <span>Online lần cuối lúc</span><br />
-                                @String.Format("{0:dd'-'MM'-'yyyy HH':'mm':'ss}", admin.last_login) <br /><span>tại</span>
-                                <a href="@admin.last_seen_url">@admin.last_seen</a>
-                            }
-                        </td>
-                        <td>
-                            <p>
-                                <label>
-                                    <input type="checkbox" class="checkbox" name="checkbox" value="@admin.id_admin" onchange="check_box()"/>
-                                    <span></span>
-                                </label>
-                            </p>
-                        </td>
-                        <td>
-                            <a href="@Url.Action("EditAdmin/" + @admin.id_admin)"><i class="material-icons">edit</i></a>
-                            <a class="modal-trigger" href="#delete-@admin.id_admin"><i class="material-icons">delete</i></a>
-                        </td>
-                    </tr>
-                    <!-- Modal Structure -->
-                    <div id="delete-@admin.id_admin" class="modal">
-                        <div class="modal-content">
-                            <h4>Xác Nhận</h4>
-                            <p>Bạn có xóa tài khoản @admin.name</p>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#" class="modal-close waves-effect waves-green btn-flat">Hủy</a>
-                            <a href="@Url.Action("DeleteAdmin/" + @admin.id_admin)" class="modal-close waves-effect waves-green btn-flat">Có</a>
-                        </div>
-                    </div>
-                }
+            <tbody id="admins-table-data">
             </tbody>
         </table>
     }
-    </div>
+</div>
 <div class="content">
     <div class="row">
         <div class="col s12">
@@ -141,35 +108,78 @@
                     <button type="submit" class="btn full-width" id="add_admin" name="add-admin">Thêm</button>
                 </div>
             }
-            </div>
+        </div>
         <div id="_add_via_file" class="col s12">
             <span class="title">Chức Năng Đang Xây Dựng!</span>
         </div>
     </div>
 </div>
+
+
+<script>
+    function get_list_admins() {
+        var url = "http://localhost:5023/api/Admins";
+        var success = function (result) {
+            show_list_admins(result);
+        };
+        $.get(url, success);
+    }
+
+    function show_list_admins(data) {
+        var list = $('#admins-table-data');
+        list.empty();
+        for (var i = 0; i < data.length; i++) {
+            var admin = data[i];
+            var tr = $('<tr></tr>');
+            tr.append('<td>' + admin.idAdmin + '</td>');
+            tr.append('<td>' + admin.username + '</td>');
+            tr.append('<td>' + admin.email + '</td>');
+            tr.append('<td>' + admin.name + '</td>');
+            tr.append('<td>' + admin.gender + '</td>');
+            tr.append('<td>' + admin.birthday + '</td>');
+            let td = $('<td></td>');
+            if (admin.lastLogin == null) {
+                td.append('<span>Chưa từng online</span>');
+            } else {
+                let lastLogin = new Date(admin.lastLogin);
+                // format dd-MM-yyyy HH:mm:ss
+                lastLogin = lastLogin.getDate() + '-' + (lastLogin.getMonth() + 1) + '-' + lastLogin.getFullYear() + ' ' + lastLogin.getHours() + ':' + lastLogin.getMinutes() + ':' + lastLogin.getSeconds();
+                td.html('<span>Online lần cuối lúc</span><br />' + lastLogin + '<br /><span>tại </span><a href="' + admin.lastSeenUrl + '">' + admin.lastSeen + '</a>');
+            }
+            tr.append(td);
+            tr.append('<td><p><label><input type="checkbox" class="checkbox" name="checkbox" value="' + admin.idAdmin + '" onchange="check_box()"><span></span></label></p></td>');
+            tr.append('<td> <a href="EditAdmin/' + admin.idAdmin + '"><i class="material-icons">edit</i></a> <a class="modal-trigger" href="#delete-' + admin.idAdmin + '"><i class="material-icons">delete</i></a></td>');
+            list.append(tr);
+        }
+        $('#admins-table').DataTable({
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_",
+                "zeroRecords": "Không tìm thấy",
+                "info": "Hiển thị trang _PAGE_/_PAGES_",
+                "infoEmpty": "Không có dữ liệu",
+                "emptyTable": "Không có dữ liệu",
+                "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
+                "sSearch": "Tìm kiếm",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Sau",
+                    "previous": "Trước"
+                }
+            },
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [7, 8] }, //hide sort icon on header of column 7, 8
+            ]
+        });
+    }
+    $(function () {
+        get_list_admins();
+    });
+</script>
+
 <script>
     $('.tabs').tabs();
     $('.modal').modal();
-    $('#admins-table').DataTable({
-        "language": {
-            "lengthMenu": "Hiển thị _MENU_",
-            "zeroRecords": "Không tìm thấy",
-            "info": "Hiển thị trang _PAGE_/_PAGES_",
-            "infoEmpty": "Không có dữ liệu",
-            "emptyTable": "Không có dữ liệu",
-            "infoFiltered": "(tìm kiếm trong tất cả _MAX_ mục)",
-            "sSearch": "Tìm kiếm",
-            "paginate": {
-                "first": "Đầu",
-                "last": "Cuối",
-                "next": "Sau",
-                "previous": "Trước"
-            }
-        },
-        "aoColumnDefs": [
-            { "bSortable": false, "aTargets": [7 , 8] }, //hide sort icon on header of column 7, 8
-        ]
-    });
     $('select').select();
     $('#checked-all').on('change', function () {
         if (this.checked) {
